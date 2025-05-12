@@ -1,5 +1,5 @@
 // src/handlers/index.ts
-export { BtcHandler } from './btcHandler';
-export { NearHandler } from './nearHandler';
-export { BtcOriginHandler } from './btcOriginHandler';
-export { NearOriginHandler } from './nearOriginHandler';
+export * from './btcHandler';
+export * from './nearHandler';
+export * from './btcOriginHandler';
+export * from './nearOriginHandler';

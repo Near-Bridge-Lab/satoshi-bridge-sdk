@@ -17,14 +17,7 @@ bitcoin.initEccLib(ecc)
 
 const proxyContract = process.env.NEXT_PUBLIC_ABTC_PROXY_ID || 'abtc-satoshi.sproxy.near'
 
-export class NearHandler {
-  private config: BridgeConfig;
-  private feeRate: number;
-
-  constructor(config: BridgeConfig, feeRate: number = 30) {
-    this.config = config;
-    this.feeRate = feeRate;
-  }
+export const NearHandler = {
 
   async handle({
     fromAmount,

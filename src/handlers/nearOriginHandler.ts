@@ -5,15 +5,7 @@ import { viewMethod } from '../utils/transaction';
 import { executeBTCDepositAndAction } from 'btc-wallet';
 import { balanceFormatedWithoutRound } from '../utils/formatter';
 
-export class NearOriginHandler {
-  private config: BridgeConfig;
-  private feeRate: number;
-
-  constructor(config: BridgeConfig, feeRate: number = 30) {
-    this.config = config;
-    this.feeRate = feeRate;
-  }
-
+export const NearOriginHandler = {
   async handle() {
     console.log('near origin handler handle')
   }
