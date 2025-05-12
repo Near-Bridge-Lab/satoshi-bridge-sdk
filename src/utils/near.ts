@@ -5,7 +5,7 @@
  import coinselect from 'coinselect';
  import { calculateGasLimit } from 'btc-wallet'
 
- export async function estimateNearGas(_satoshis: string | number, toAccount: string,fromAccount: string, walletType: string, isABTC?: boolean, feeRate?: number) {
+ export async function estimateNearGas(_satoshis: string | number, fromAddress: string,toAddress: string, walletType: string, isABTC?: boolean, feeRate?: number) {
     try {
         let gasLimit: any = 0
         const activeToken = isABTC ? ABTC_ADDRESS : NBTC_ADDRESS
@@ -13,7 +13,7 @@
             try {
                 gasLimit = await calculateGasLimit({
                     env: (process.env.NEXT_PUBLIC_BTC_WALLET_NET || 'testnet') as any,
-                    csna: fromAccount as string,
+                    csna: fromAddress as string,
                     transactions: [{
                         receiverId: activeToken as string,
                         signerId: '',
@@ -108,7 +108,7 @@
         // Use coinselect to calculate inputs, outputs, and fee
         const { inputs, outputs, fee } = coinselect(
             utxos,
-            [{ address: toAccount, value: userSatoshis }],
+            [{ address: toAddress, value: userSatoshis }],
             Math.ceil(feeRate || 6),
         )
 
@@ -210,7 +210,7 @@
             }
         }
 
-        // 检查用户输出是否低于最小提款金额
+        // 
         if (userOutput.value < Number(metaData.min_withdraw_amount)) {
             const minWithdrawAmount = new Big(metaData.min_withdraw_amount)
                 .plus(minChangeAmount)

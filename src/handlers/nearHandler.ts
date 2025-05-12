@@ -28,30 +28,47 @@ export const NearHandler = {
     toTokenAddress = NBTC_ADDRESS,
     fromTokenDecimals = 18,
     toTokenDecimals = 8,
-  }: any): Promise<Array<any> | null> {
+    walletId = 'my-near-wallet',
+    feeRate = 6,
+    isABTC = true,
+    env = 'mainnet'
+  }: {
+    fromAmount: string,
+    fromAddress: string,
+    toAddress: string,
+    walletId: string,
+    slippage?: number,
+    fromTokenAddress?: string,
+    toTokenAddress?: string,
+    fromTokenDecimals?: number,
+    toTokenDecimals?: number,
+    feeRate?: number,
+    isABTC?: boolean,
+    env?: string
+  }): Promise<Array<any> | null> {
             const nBtcInOut:any = {};
             // First query the swap to get expected output amount
             const querySwapRes = await querySwap({
                 tokenIn: fromTokenAddress,
                 tokenOut: toTokenAddress,
-                // amountIn: fromAmountMuiusFee ? new Big(fromAmountMuiusFee).div(10 ** 8).toString() : fromAmount,
                 amountIn: fromAmount,
                 tokenInDecimals: fromTokenDecimals,
                 tokenOutDecimals: toTokenDecimals,
                 slippage: slippage > 0.2 ? 0.2 : slippage,
             })
             
-            const baseRegisterTransaction = await registerToken(ABTC_ADDRESS);
+            // const baseRegisterTransaction = await registerToken(ABTC_ADDRESS, fromAddress);
             const satoshis = (querySwapRes as any).amount_out
-            const account_id = toAddress;
+            // const account_id = toAddress;
             const estimateResult = await estimateNearGas(
                 Number(satoshis),
-                account_id as string,
-                account_id as string,
-                'btc-wallet',
-                true,
-                6
+                fromAddress,
+                toAddress,
+                walletId,
+                isABTC,
+                feeRate
             );
+
             if (!estimateResult || estimateResult.isError) {
                 return estimateResult?.errorMsg;
             }
@@ -72,6 +89,7 @@ export const NearHandler = {
                 rpcEndpoint: process.env.NEXT_PUBLIC_BTC_NET === 'testnet' ? `https://blockstream.info/testnet/api/`: `https://blockstream.info/api/`,
                 scanUrl: process.env.NEXT_PUBLIC_BTC_NET === 'testnet' ? 'https://blockstream.info/testnet' : 'https://blockstream.info',
             }
+
             for (let i = 0; i < inputs.length; i++) {
                 const input = inputs[i];
                 const txData = await fetch(`${btcConfig.rpcEndpoint}tx/${input.txid}`).then(res => res.json());
@@ -157,9 +175,9 @@ export const NearHandler = {
             // Prepare the transactions array
             const transactions: any = [];
             
-            if (baseRegisterTransaction) {
-                transactions.push(baseRegisterTransaction);
-            }
+            // if (baseRegisterTransaction) {
+            //     transactions.push(baseRegisterTransaction);
+            // }
             
             const parsedAmountIn = parseAmount(fromAmount, 18);
             
@@ -183,7 +201,6 @@ export const NearHandler = {
                 ],
             });
             return transactions;
-  }
-
+    }
 }
 
