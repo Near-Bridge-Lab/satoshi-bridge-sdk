@@ -6,6 +6,7 @@
  import { calculateGasLimit } from 'btc-wallet'
 
  export async function estimateNearGas(_satoshis: string | number, fromAddress: string,toAddress: string, walletType: string, isABTC?: boolean, feeRate?: number) {
+    console.log(_satoshis, fromAddress, toAddress, walletType, isABTC, feeRate, 'sdk estimateNearGas')
     try {
         let gasLimit: any = 0
         const activeToken = isABTC ? ABTC_ADDRESS : NBTC_ADDRESS

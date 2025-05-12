@@ -81,13 +81,13 @@ export const NearHandler = {
             
             const { inputs, outputs } = nBtcInOut.current;
             
-            const network = process.env.NEXT_PUBLIC_BTC_NET === 'testnet' ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
+            const network = env === 'testnet' ? bitcoin.networks.testnet : bitcoin.networks.bitcoin;
             const psbt = new bitcoin.Psbt({ network });
             
             const btcConfig = {
                 name: 'BTC',
-                rpcEndpoint: process.env.NEXT_PUBLIC_BTC_NET === 'testnet' ? `https://blockstream.info/testnet/api/`: `https://blockstream.info/api/`,
-                scanUrl: process.env.NEXT_PUBLIC_BTC_NET === 'testnet' ? 'https://blockstream.info/testnet' : 'https://blockstream.info',
+                rpcEndpoint: env === 'testnet' ? `https://blockstream.info/testnet/api/`: `https://blockstream.info/api/`,
+                scanUrl: env === 'testnet' ? 'https://blockstream.info/testnet' : 'https://blockstream.info',
             }
 
             for (let i = 0; i < inputs.length; i++) {
