@@ -56,7 +56,7 @@ export const NearHandler = {
                 tokenOutDecimals: toTokenDecimals,
                 slippage: slippage > 0.2 ? 0.2 : slippage,
             })
-            
+            console.log(fromAmount, fromTokenAddress, toTokenAddress,querySwapRes, 'querySwapRes >>> 59')
             // const baseRegisterTransaction = await registerToken(ABTC_ADDRESS, fromAddress);
             const satoshis = (querySwapRes as any).amount_out
             // const account_id = toAddress;
