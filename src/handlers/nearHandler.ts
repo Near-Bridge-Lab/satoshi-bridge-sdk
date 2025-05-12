@@ -45,7 +45,10 @@ export const NearHandler = {
     feeRate?: number,
     isABTC?: boolean,
     env?: string
-  }): Promise<Array<any> | null> {
+  }): Promise<Array<any> | null | {
+    isError: boolean,
+    errorMsg: string
+  }> {
             const nBtcInOut:any = {};
             // First query the swap to get expected output amount
             const querySwapRes = await querySwap({
@@ -56,7 +59,6 @@ export const NearHandler = {
                 tokenOutDecimals: toTokenDecimals,
                 slippage: slippage > 0.2 ? 0.2 : slippage,
             })
-            console.log(fromAmount, fromTokenAddress, toTokenAddress,querySwapRes, 'querySwapRes >>> 59')
             // const baseRegisterTransaction = await registerToken(ABTC_ADDRESS, fromAddress);
             const satoshis = (querySwapRes as any).amount_out
             // const account_id = toAddress;
@@ -70,7 +72,10 @@ export const NearHandler = {
             );
 
             if (!estimateResult || estimateResult.isError) {
-                return estimateResult?.errorMsg;
+                return {
+                    isError: true,
+                    errorMsg: estimateResult?.errorMsg || 'Estimate gas failed'
+                };
             }
             
             nBtcInOut.current = {
