@@ -35,7 +35,7 @@ export const NearOriginHandler = {
     let isError = false;
 
     const estimateResult = await estimateNearGas(
-        Number(fromAmount),
+        new Big(fromAmount).mul(10 ** 8).toString(),
         fromAddress,
         toAddress,
         walletId,
