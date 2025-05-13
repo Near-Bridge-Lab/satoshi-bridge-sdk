@@ -8,15 +8,43 @@ for BTC-NEAR bridge
 npm install satoshi-bridge-sdk
 ```
 
-## near walletType
-nearWalletType: 'btc-wallet' |  'near-wallet'
+## Project Structure
 
+```
+satoshi-bridge-sdk/
+├── src/
+│   ├── handlers/
+│   │   ├── BtcHandler.ts         # Handles ABTC deposits
+│   │   ├── BtcOriginHandler.ts   # Handles NBTC deposits
+│   │   ├── NearHandler.ts        # Handles ABTC withdrawals
+│   │   └── NearOriginHandler.ts  # Handles NBTC withdrawals
+│   ├── utils/
+│   │   ├── estimateGas.ts        # Gas estimation utilities
+│   │   ├── transactions.ts       # Transaction helpers
+│   │   └── wallets.ts            # Wallet integration utilities
+│   │   └── uploadHash.ts         # upload hash to services
+│   ├── types.ts                  # Type definitions
+│   ├── constants.ts              # SDK constants and configurations
+│   └── index.ts                  # Main entry point
+├── package.json
+└── README.md
+```
+
+## near walletType
+nearWalletType: 'btc-wallet' |  'my-near-wallet' | 'meteor-wallet' | eg.
+
+## NEAR Wallet Types
+The SDK supports various NEAR wallets:
+- 'btc-wallet'
+- 'my-near-wallet'
+- 'meteor-wallet'
+- And others
 
 ## Usage
 
-### BTC->NEAR
+### BTC->NEAR Bridge
 
-if deposit token is NBTC
+#### Depositing NBTC
 
 ```js
     import { executeBTCDepositAndAction, useBTCProvider } from 'btc-wallet'
@@ -29,6 +57,7 @@ if deposit token is NBTC
          receiveAmount: string,
          isSuccess: boolean,
     }
+    //you can estimate the gas fee
     const estimateResult: EstimateGasResult = await estimateBtcGas(fromAmount, feeRate, fromAddress, env);
     
     if (nearWalletType === 'btc-wallet') {
@@ -38,7 +67,7 @@ if deposit token is NBTC
             toAddress,
             feeRate = 6,
             env = 'mainnet',
-            nearWalletType = 'btc-wallet'
+            nearWalletType = 'btc-wallet' // your wallet id such as 'my-near-wallet' ,'btc-wallet' , 'meteor-wallet' eg.
         })
 
          const hash: string = await executeBTCDepositAndAction({
@@ -66,7 +95,7 @@ if deposit token is NBTC
     }
 ```
 
-if deposit token is ABTC
+#### Depositing ABTC
 
 ```js
     import { executeBTCDepositAndAction, useBTCProvider } from 'btc-wallet'
@@ -78,6 +107,7 @@ if deposit token is ABTC
          receiveAmount: string,
          isSuccess: boolean,
     }
+     //you can estimate the gas fee
     const estimateResult: EstimateGasResult = await estimateBtcGas(fromAmount, feeRate, fromAddress, env);
 
     // you must confrim the token is not registered in NEAR 
@@ -144,9 +174,9 @@ if deposit token is ABTC
 ```
 
 
-## NEAR->BTC
+### NEAR->BTC Bridge
 
-if withdraw token is NBTC
+#### Withdrawing NBTC
 
 ```js
     import { NearOriginHandler, estimateNearGas, updateWithdraw } from 'satoshi-bridge-sdk'
@@ -164,7 +194,7 @@ if withdraw token is NBTC
    await updateWithdraw(hash)
 ```
 
-if withdraw token is ABTC
+#### Withdrawing ABTC
 
 ```js
     import { NearHandler, estimateNearGas, updateWithdraw } from 'satoshi-bridge-sdk'
