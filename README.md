@@ -30,9 +30,6 @@ satoshi-bridge-sdk/
 └── README.md
 ```
 
-## near walletType
-nearWalletType: 'btc-wallet' |  'my-near-wallet' | 'meteor-wallet' | eg.
-
 ## NEAR Wallet Types
 The SDK supports various NEAR wallets:
 - 'btc-wallet'
