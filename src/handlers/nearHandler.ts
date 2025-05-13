@@ -15,7 +15,6 @@ import { parseAmount, uint8ArrayToHex } from '../utils/formatter';
 
 bitcoin.initEccLib(ecc)
 
-const proxyContract = process.env.NEXT_PUBLIC_ABTC_PROXY_ID || 'abtc-satoshi.sproxy.near'
 
 export const NearHandler = {
 
@@ -49,6 +48,7 @@ export const NearHandler = {
     isError: boolean,
     errorMsg: string
   }> {
+            const proxyContract = env === 'testnet' ? 'vastdress3984.near' : 'abtc-satoshi.sproxy.near'
             const nBtcInOut:any = {};
             // First query the swap to get expected output amount
             const querySwapRes = await querySwap({
@@ -68,7 +68,8 @@ export const NearHandler = {
                 toAddress,
                 walletId,
                 isABTC,
-                feeRate
+                feeRate,
+                env
             );
 
             if (!estimateResult || estimateResult.isError) {

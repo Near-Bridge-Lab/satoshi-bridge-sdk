@@ -67,7 +67,7 @@ export const NearOriginHandler = {
     const { inputs, outputs } = nBtcInOut.current
 
 
-    const network = process.env.NEXT_PUBLIC_BTC_NET === 'testnet' ? bitcoin.networks.testnet : bitcoin.networks.bitcoin
+    const network = env === 'testnet' ? bitcoin.networks.testnet : bitcoin.networks.bitcoin
 
     const psbt = new bitcoin.Psbt({ network });
 
@@ -130,13 +130,27 @@ export const NearOriginHandler = {
 
     const msgStr = JSON.stringify(msg)
 
-    return {
-        method: 'ft_transfer_call',
-        args: {
-            receiver_id: process.env.NEXT_PUBLIC_CONTRACT_ID,
-            amount: satoshis.toString(),
-            msg: msgStr
-        }
-    }
+
+    const transaction = []
+    transaction.push({
+        receiverId: 'nbtc.bridge.near',
+        actions: [
+        {
+            type: "FunctionCall",
+            params: {
+                methodName: 'ft_transfer_call',
+                args: {
+                    receiver_id: 'btc-connector.bridge.near',
+                    amount: satoshis.toString(),
+                    msg: msgStr
+                },
+                gas: THIRTY_TGAS,
+                deposit: '1',
+            },
+        },
+    ],
+})
+
+    return transaction;
   }
 }

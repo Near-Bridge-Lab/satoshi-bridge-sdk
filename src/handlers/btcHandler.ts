@@ -1,13 +1,142 @@
 // src/handlers/btcHandler.ts
 import Big from 'big.js';
 import { BridgeConfig, BtcHandleParams, EstimateGasResult } from '../types';
-import { viewMethod } from '../utils/transaction';
+import { viewMethod,generateTransaction } from '../utils/transaction';
 import { executeBTCDepositAndAction } from 'btc-wallet';
 import { balanceFormatedWithoutRound } from '../utils/formatter';
+import { ABTC_ADDRESS, NBTC_ADDRESS,THIRTY_TGAS } from '../constants';
+import { estimateBtcGas } from '../utils/btc';
 
 export const BtcHandler = {
 
-  async handle() {
-    console.log('btc handler handle')
+  async handle(
+    {
+      fromAmount,
+      fromAddress,
+      toAddress,
+      slippage = 0.05,
+      fromTokenAddress,
+      toTokenAddress,
+      fromTokenDecimals = 18,
+      toTokenDecimals = 8,
+      walletId = 'my-near-wallet',
+      feeRate = 6,
+      env = 'mainnet',
+      nearWalletType = 'btc-wallet'
+    }: {
+      fromAmount: string,
+      fromAddress: string,
+      toAddress: string,
+      walletId: string,
+      nearWalletType: 'btc-wallet' | 'near-wallet',
+      slippage?: number,
+      fromTokenAddress?: string,
+      toTokenAddress?: string,
+      fromTokenDecimals?: number,
+      toTokenDecimals?: number,
+      feeRate?: number,
+      env?: string,
+    }
+  ) {
+
+  let btnTempAddress
+
+  const params: any = {}
+  const _fromAmount = +balanceFormatedWithoutRound(new Big(fromAmount).mul(10 ** 8).toString())
+
+  const estimateResult = await estimateBtcGas(new Big(fromAmount).mul(10 ** 8).toNumber(), feeRate, fromAddress, env)
+
+    if (nearWalletType === 'btc-wallet') {
+    
+
+        // Generate swap transaction
+          const action = await generateTransaction({
+              tokenIn: NBTC_ADDRESS,
+              tokenOut: ABTC_ADDRESS,
+              amountIn: estimateResult.receiveAmount.toString(),
+              // amountIn: fromAmount.toString(),
+              decimals: 8,
+              slippage: slippage > 0.2 ? 0.2 : slippage,
+          });
+
+            const hash: any = await executeBTCDepositAndAction({
+                amount: _fromAmount.toString(),
+                env: (env || 'testnet') as any,
+                feeRate,
+                pollResult: false,
+                newAccountMinDepositAmount: false,
+                action: {
+                    receiver_id: 'v2.ref-finance.near',
+                    amount: new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
+                    msg: action.args.msg,
+                },
+                registerContractId: ABTC_ADDRESS,
+            });
+            
+            
+            return  {
+              receivePreDepositMsg: params,
+              transaction: {
+                amount: _fromAmount.toString(),
+                env: (env || 'testnet') as any,
+                feeRate,
+                pollResult: false,
+                newAccountMinDepositAmount: false,
+                action: {
+                    receiver_id: 'v2.ref-finance.near',
+                    amount: new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
+                    msg: action.args.msg,
+                },
+                registerContractId: ABTC_ADDRESS,
+              }
+            }
+        
+    } else {
+        const action = await generateTransaction({
+            tokenIn: NBTC_ADDRESS,
+            tokenOut: ABTC_ADDRESS,
+            amountIn: new Big(estimateResult.receiveAmount).toString(),
+            decimals: 8,
+            slippage: slippage > 0.2 ? 0.2 : slippage,
+          });
+        const depositMsg: any = {
+            recipient_id: toAddress,
+            post_actions:[{
+                receiver_id: 'v2.ref-finance.near',
+                amount:new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
+                msg: action.args.msg,
+                gas: "50000000000000",
+            }],
+            extra_msg: undefined,
+          };
+      
+        btnTempAddress = await viewMethod({
+            method: 'get_user_deposit_address',
+            args: {
+                deposit_msg: depositMsg
+            
+            }
+        })
+        params.nearAddress = toAddress
+        params.depositType = 1
+        params.postActions = JSON.stringify([{
+            receiver_id: 'v2.ref-finance.near',
+            // amount: new Big(_fromAmount).minus(2000).toString(),
+            amount:new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
+            msg: action.args.msg,
+            gas: "50000000000000",
+        }])
+        params.extraMsg = undefined;
+
+
+        return  {
+          receivePreDepositMsg: params,
+          transaction: {
+            btnTempAddress,
+            _fromAmount,
+            feeRate
+          }
+        }
+    }
   }
 }

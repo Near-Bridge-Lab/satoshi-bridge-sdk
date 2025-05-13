@@ -2,10 +2,12 @@
 import { providers } from "near-api-js";
 import { QuerySwapParams, NearQuerySwapResponse } from "../types";
 import Big from "big.js";
-import { parseAmount, formatAmount, generateUrl } from "./formatter";
+import { parseAmount, formatAmount, generateUrl,safeJSONParse } from "./formatter";
 import request from './request'
 import { FinalExecutionOutcome, QueryResponseKind } from 'near-api-js/lib/providers/provider';
 import { CONTRACT_ID } from "../constants";
+import { type FunctionCallAction, type Transaction } from '@near-wallet-selector/core';
+
 export function getProvider(network: string) {
   const url = `https://rpc.${network}.near.org`;
   const provider = new providers.JsonRpcProvider({ url });
@@ -90,13 +92,12 @@ export async function querySwap({
 }
 
 
-export async function getAccountInfo(account: string) {
-    const provider = getProvider('mainnet')
+export async function getAccountInfo(account: string, network: string) {
+    const provider = getProvider(network)
 
     const res1: any = await provider.query({
         request_type: "call_function",
-        // contractId: token,
-        account_id: process.env.NEXT_PUBLIC_ACCOUNT_CONTRACT_ID,
+        account_id: network === 'testnet' ? 'acc.toalice.near' : 'acc.ref-labs.near',
         method_name: 'get_account',
         args_base64: Buffer.from(JSON.stringify({
             account_id: account
@@ -178,3 +179,36 @@ export const query = async <T = any>({
       console.error(`${method} error`, error);
     }
   }
+
+export const generateTransaction = async ({
+    tokenIn,
+    tokenOut,
+    amountIn,
+    pathDeep = 3,
+    slippage = 0.005,
+    routerCount,
+    decimals = 18,
+  }: any) => {
+    const parsedAmountIn = parseAmount(amountIn, decimals);
+    const {
+      result_data: { methodName, args, gas },
+    } = await request<{ result_data: FunctionCallAction['params'] }>(
+      generateUrl(`https://smartrouter.ref.finance/swapPath`, {
+        tokenIn,
+        tokenOut,
+        amountIn: parsedAmountIn,
+        pathDeep,
+        slippage,
+      }),
+    );
+    const parsedMsg = safeJSONParse<any>((args as any).msg);
+    if (!parsedMsg?.actions.length) throw new Error('No swap path found');
+   
+    const newArgs = { ...args, msg: JSON.stringify(parsedMsg) };
+    return {
+      methodName,
+      gas,
+      deposit: '1',
+      args: { ...newArgs, receiver_id:'v2.ref-finance.near' },
+    };
+  } 

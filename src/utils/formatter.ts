@@ -14,6 +14,16 @@ export function formatAmount(amount: string | number, decimals: number = 8): str
 }
 
 
+export function safeJSONParse<T>(str: string): T | undefined {
+  try {
+    return JSON.parse(str) as T;
+  } catch (e) {
+    console.error('safeJSONParse', e);
+    return undefined;
+  }
+}
+
+
 export function uint8ArrayToHex(uint8Array: any) {
     return Array.from(uint8Array)
         .map((byte: any) => byte.toString(16).padStart(2, '0'))
@@ -57,3 +67,7 @@ export function generateUrl(
   
     return url;
   }
+
+
+
+  

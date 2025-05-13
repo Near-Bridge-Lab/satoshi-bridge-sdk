@@ -5,14 +5,14 @@
  import coinselect from 'coinselect';
  import { calculateGasLimit } from 'btc-wallet'
 
- export async function estimateNearGas(_satoshis: string | number, fromAddress: string,toAddress: string, walletType: string, isABTC?: boolean, feeRate?: number) {
+ export async function estimateNearGas(_satoshis: string | number, fromAddress: string,toAddress: string, walletType: string, isABTC?: boolean, feeRate?: number, env?: string) {
     try {
         let gasLimit: any = 0
         const activeToken = isABTC ? ABTC_ADDRESS : NBTC_ADDRESS
         if (walletType === 'btc-wallet' && !isABTC) {
             try {
                 gasLimit = await calculateGasLimit({
-                    env: (process.env.NEXT_PUBLIC_BTC_WALLET_NET || 'testnet') as any,
+                    env: (env || 'mainnet') as any,
                     csna: fromAddress as string,
                     transactions: [{
                         receiverId: activeToken as string,
@@ -23,7 +23,7 @@
                                 params: {
                                     methodName: 'ft_transfer_call',
                                     args: {
-                                        receiver_id: process.env.NEXT_PUBLIC_CONTRACT_ID,
+                                        receiver_id: 'btc-connector.bridge.near',
                                         amount: '100',
                                         msg: ''
                                     },
