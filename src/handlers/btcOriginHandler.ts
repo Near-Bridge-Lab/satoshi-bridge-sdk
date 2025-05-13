@@ -14,12 +14,6 @@ export const BtcOriginHandler = {
       fromAmount,
       fromAddress,
       toAddress,
-      slippage = 0.05,
-      fromTokenAddress,
-      toTokenAddress,
-      fromTokenDecimals = 18,
-      toTokenDecimals = 8,
-      walletId = 'my-near-wallet',
       feeRate = 6,
       env = 'mainnet',
       nearWalletType = 'btc-wallet'
@@ -27,13 +21,7 @@ export const BtcOriginHandler = {
       fromAmount: string,
       fromAddress: string,
       toAddress: string,
-      walletId: string,
       nearWalletType: 'btc-wallet' | 'near-wallet',
-      slippage?: number,
-      fromTokenAddress?: string,
-      toTokenAddress?: string,
-      fromTokenDecimals?: number,
-      toTokenDecimals?: number,
       feeRate?: number,
       env?: string,
     }
@@ -48,11 +36,14 @@ export const BtcOriginHandler = {
 
   if (nearWalletType === 'btc-wallet') {
       return  {
-        amount: _fromAmount.toString(),
-        env: (env || 'testnet') as any,
-        feeRate,
-        pollResult: false,
-        newAccountMinDepositAmount: false,
+       receivePreDepositMsg: params,
+        transaction: {
+          amount: _fromAmount.toString(),
+          env: (env || 'testnet') as any,
+          feeRate,
+          pollResult: false,
+          newAccountMinDepositAmount: false,
+        }
     }
 
   } else {

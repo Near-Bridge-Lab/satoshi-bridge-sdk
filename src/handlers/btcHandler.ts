@@ -44,7 +44,7 @@ export const BtcHandler = {
   const params: any = {}
   const _fromAmount = +balanceFormatedWithoutRound(new Big(fromAmount).mul(10 ** 8).toString())
 
-  const estimateResult = await estimateBtcGas(new Big(fromAmount).mul(10 ** 8).toNumber(), feeRate, fromAddress, env)
+  const estimateResult = await estimateBtcGas(new Big(fromAmount).mul(10 ** 8).toNumber(), feeRate, fromAddress, env as 'mainnet' | 'testnet')
 
     if (nearWalletType === 'btc-wallet') {
     
@@ -87,7 +87,7 @@ export const BtcHandler = {
                     amount: new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
                     msg: action.args.msg,
                 },
-                registerContractId: ABTC_ADDRESS,
+                // registerContractId: ABTC_ADDRESS,
               }
             }
         

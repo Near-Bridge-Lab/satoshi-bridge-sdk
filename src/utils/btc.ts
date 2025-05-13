@@ -6,7 +6,7 @@ import { viewMethod,getAccountInfo} from './transaction';
 import coinselect from 'coinselect';
 import { calculateGasLimit } from 'btc-wallet'
 
-export const estimateBtcGas = async (fromAmount: number, feeRate: number, account: string, env: string) => {
+export const estimateBtcGas = async (fromAmount: number, feeRate: number, account: string, env: 'mainnet' | 'testnet') => {
     const metaData = await viewMethod({
         method: 'get_config',
         args: {}
