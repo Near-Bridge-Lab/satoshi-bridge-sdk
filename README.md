@@ -37,6 +37,23 @@ The SDK supports various NEAR wallets:
 - 'meteor-wallet'
 - And others
 
+
+## Parameter Description
+
+| Parameter | Description | Type | Default |
+|-----------|-------------|------|---------|
+| fromAmount | The amount you want to bridge | number/string | - |
+| fromAddress | Your source asset address | string | - |
+| toAddress | Your destination address | string | - |
+| feeRate | BTC transaction fee rate:<br/>- 5: fast<br/>- 6: average<br/>- 7: slow<br/>- 0: custom | number | 6 |
+| env | Environment type:<br/>`mainnet` or `testnet` | string | 'mainnet' |
+| fromTokenDecimals | Source token decimals (ABTC/NBTC) for token swap | number | - |
+| toTokenDecimals | Destination token decimals (ABTC/NBTC) for token swap | number | - |
+| walletId | Your current wallet identifier | string | - |
+
+  
+
+
 ## Usage
 
 ### BTC->NEAR Bridge
@@ -54,11 +71,27 @@ The SDK supports various NEAR wallets:
          receiveAmount: string,
          isSuccess: boolean,
     }
+
+    type ContractRepParams = {
+                receiverId: string;
+                actions: [
+                {
+                    type: "FunctionCall";
+                    params: {
+                        methodName: string;
+                        args: string;
+                        gas: string;
+                        deposit: string;
+                    },
+                },
+            ],
+        }
+
     //you can estimate the gas fee
     const estimateResult: EstimateGasResult = await estimateBtcGas(fromAmount, feeRate, fromAddress, env);
     
     if (nearWalletType === 'btc-wallet') {
-        const respTransaction = await BtcOriginHandler.handle( {
+        const respTransaction:ContractRepParams = await BtcOriginHandler.handle( {
             fromAmount,
             fromAddress,
             toAddress,
@@ -75,7 +108,7 @@ The SDK supports various NEAR wallets:
 
     } else {
         const { accounts, sendBitcoin, provider, getPublicKey, signMessage } = useBTCProvider();
-        const respTransaction = await BtcOriginHandler.handle( {
+        const respTransaction:ContractRepParams = await BtcOriginHandler.handle( {
             fromAmount,
             fromAddress,
             toAddress,
@@ -112,7 +145,7 @@ The SDK supports various NEAR wallets:
 
 
     if (nearWalletType === 'btc-wallet') {
-        const respTransaction = await BtcHandler.handle( {
+        const respTransaction:ContractRepParams = await BtcHandler.handle( {
             fromAmount,
             fromAddress,
             toAddress,
@@ -146,7 +179,7 @@ The SDK supports various NEAR wallets:
         // after you register the token, you can use the following code
 
         const { accounts, sendBitcoin, provider, getPublicKey, signMessage } = useBTCProvider();
-        const respTransaction = await BtcHandler.handle( {
+        const respTransaction:ContractRepParams = await BtcHandler.handle( {
             fromAmount,
             fromAddress,
             toAddress,
@@ -178,9 +211,9 @@ The SDK supports various NEAR wallets:
 ```js
     import { NearOriginHandler, estimateNearGas, updateWithdraw } from 'satoshi-bridge-sdk'
 
-    const estimateResult = await estimateNearGas(fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env);
+    const estimateResult:EstimateGasResult = await estimateNearGas(fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env);
 
-    const respTransaction = await NearOriginHandler.handle({
+    const respTransaction:ContractRepParams = await NearOriginHandler.handle({
         fromAmount,
         fromAddress,
         toAddress,
@@ -196,9 +229,9 @@ The SDK supports various NEAR wallets:
 ```js
     import { NearHandler, estimateNearGas, updateWithdraw } from 'satoshi-bridge-sdk'
 
-    const estimateResult = await estimateNearGas(fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env);
+    const estimateResult:EstimateGasResult = await estimateNearGas(fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env);
 
-    const respTransaction = await NearHandler.handle({
+    const respTransaction:ContractRepParams = await NearHandler.handle({
         fromAmount,
         fromAddress,
         toAddress,
