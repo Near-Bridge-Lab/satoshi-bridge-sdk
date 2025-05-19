@@ -13,6 +13,27 @@ import {getNetworkConfig} from '../constants'
 import { parseAmount, uint8ArrayToHex } from '../utils/formatter';
 
 
+type NearHandleResp = {
+    receiverId: string;
+    actions: [
+        {
+            type: string;
+            params: {
+                methodName: string;
+                args: {
+                    receiver_id: string;
+                    amount: string;
+                    msg: string;
+                },
+                gas: string;
+                deposit: string;
+            },
+        }
+    ]
+}
+
+
+
 bitcoin.initEccLib(ecc)
 
 
@@ -44,7 +65,7 @@ export const NearHandler = {
     feeRate?: number,
     isABTC?: boolean,
     env?: string
-  }): Promise<Array<any> | null | {
+  }): Promise<Array<NearHandleResp> | {
     isError: boolean,
     errorMsg: string
   }> {

@@ -12,6 +12,28 @@ import ecc from '@bitcoinerlab/secp256k1';
 import {getNetworkConfig} from '../constants'
 import { parseAmount, uint8ArrayToHex } from '../utils/formatter';
 
+
+type NearOriginHandleResp ={
+    receiverId: string;
+    actions: [
+        {
+            type: string;
+            params: {
+                methodName: string;
+                args: {
+                    receiver_id: string;
+                    amount: string;
+                    msg: string;
+                },
+                gas: string;
+                deposit: string;
+            },
+        },
+    ],
+}
+
+
+
 export const NearOriginHandler = {
   async handle(
     {
@@ -29,7 +51,10 @@ export const NearOriginHandler = {
         feeRate?: number,
         env?: string
       }
-  ) {
+  ): Promise<NearOriginHandleResp | {
+    isError: boolean,
+    errorMsg: string
+  }> {
     const nBtcInOut:any = {};
     let fromAmountMinus = fromAmount;
     let isError = false;
@@ -58,7 +83,10 @@ export const NearOriginHandler = {
     fromAmountMinus = estimateResult?.fromAmount?.toString() || new Big(fromAmount.toString()).mul(10 ** 8).toString()
 
     if (isError || !nBtcInOut.current) {
-        return
+        return {
+            isError: true,
+            errorMsg: 'Estimate gas failed'
+        }
     }
 
     const satoshis = fromAmountMinus
@@ -131,26 +159,43 @@ export const NearOriginHandler = {
     const msgStr = JSON.stringify(msg)
 
 
-    const transaction = []
-    transaction.push({
-        receiverId: 'nbtc.bridge.near',
-        actions: [
-        {
-            type: "FunctionCall",
-            params: {
-                methodName: 'ft_transfer_call',
-                args: {
-                    receiver_id: 'btc-connector.bridge.near',
-                    amount: satoshis.toString(),
-                    msg: msgStr
-                },
-                gas: THIRTY_TGAS,
-                deposit: '1',
-            },
-        },
-    ],
-})
+    // const transaction = []
+    //     transaction.push({
+    //         receiverId: 'nbtc.bridge.near',
+    //         actions: [
+    //         {
+    //             type: "FunctionCall",
+    //             params: {
+    //                 methodName: 'ft_transfer_call',
+    //                 args: {
+    //                     receiver_id: 'btc-connector.bridge.near',
+    //                     amount: satoshis.toString(),
+    //                     msg: msgStr
+    //                 },
+    //                 gas: THIRTY_TGAS,
+    //                 deposit: '1',
+    //             },
+    //         },
+    //     ],
+    // })
 
-    return transaction;
+    return {
+        receiverId: 'nbtc.bridge.near',
+            actions: [
+            {
+                type: "FunctionCall",
+                params: {
+                    methodName: 'ft_transfer_call',
+                    args: {
+                        receiver_id: 'btc-connector.bridge.near',
+                        amount: satoshis.toString(),
+                        msg: msgStr
+                    },
+                    gas: THIRTY_TGAS,
+                    deposit: '1',
+                },
+            },
+        ],
+    };
   }
 }

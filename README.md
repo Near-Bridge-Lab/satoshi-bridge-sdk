@@ -72,21 +72,6 @@ The SDK supports various NEAR wallets:
          isSuccess: boolean,
     }
 
-    type ContractRepParams = {
-                receiverId: string;
-                actions: [
-                {
-                    type: "FunctionCall";
-                    params: {
-                        methodName: string;
-                        args: string;
-                        gas: string;
-                        deposit: string;
-                    },
-                },
-            ],
-        }
-
     //you can estimate the gas fee
     const estimateResult: EstimateGasResult = await estimateBtcGas(fromAmount, feeRate, fromAddress, env);
     
@@ -132,7 +117,7 @@ The SDK supports various NEAR wallets:
 
     } else {
         const { accounts, sendBitcoin, provider, getPublicKey, signMessage } = useBTCProvider();
-        const respTransaction:ContractRepParams = await BtcOriginHandler.handle( {
+        const respTransaction = await BtcOriginHandler.handle( {
             fromAmount,
             fromAddress,
             toAddress,
@@ -207,7 +192,7 @@ The SDK supports various NEAR wallets:
         // after you register the token, you can use the following code
 
         const { accounts, sendBitcoin, provider, getPublicKey, signMessage } = useBTCProvider();
-        const respTransaction:ContractRepParams = await BtcHandler.handle( {
+        const respTransaction = await BtcHandler.handle( {
             fromAmount,
             fromAddress,
             toAddress,
@@ -234,9 +219,31 @@ The SDK supports various NEAR wallets:
 ```js
     import { NearOriginHandler, estimateNearGas, updateWithdraw } from 'satoshi-bridge-sdk'
 
+    type NearOriginHandleResp ={
+        receiverId: string;
+        actions: [
+            {
+                type: string;
+                params: {
+                    methodName: string;
+                    args: {
+                        receiver_id: string;
+                        amount: string;
+                        msg: string;
+                    },
+                    gas: string;
+                    deposit: string;
+                },
+            },
+        ],
+    }
+
     const estimateResult:EstimateGasResult = await estimateNearGas(fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env);
 
-    const respTransaction:ContractRepParams = await NearOriginHandler.handle({
+    const respTransaction:Promise<NearOriginHandleResp | {
+        isError: boolean,
+        errorMsg: string
+    }> = await NearOriginHandler.handle({
         fromAmount,
         fromAddress,
         toAddress,
@@ -244,7 +251,7 @@ The SDK supports various NEAR wallets:
         feeRate,
         env,
     })
-   const hash = await wallet.signAndSendTransactions(respTransaction)
+   const hash = await wallet.signAndSendTransaction(respTransaction)
    await updateWithdraw(hash)
 ```
 
@@ -253,9 +260,32 @@ The SDK supports various NEAR wallets:
 ```js
     import { NearHandler, estimateNearGas, updateWithdraw } from 'satoshi-bridge-sdk'
 
-    const estimateResult:EstimateGasResult = await estimateNearGas(fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env);
+    type NearHandleResp = {
+        receiverId: string;
+        actions: [
+            {
+                type: string;
+                params: {
+                    methodName: string;
+                    args: {
+                        receiver_id: string;
+                        amount: string;
+                        msg: string;
+                    },
+                    gas: string;
+                    deposit: string;
+                },
+            }
+        ]
+    }
 
-    const respTransaction:ContractRepParams = await NearHandler.handle({
+    const estimateResult:EstimateGasResult = await estimateNearGas(fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env);
+    
+
+    const respTransaction:Promise<Array<NearHandleResp> | {
+        isError: boolean,
+        errorMsg: string
+    }> = await NearHandler.handle({
         fromAmount,
         fromAddress,
         toAddress,
