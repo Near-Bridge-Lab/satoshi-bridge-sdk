@@ -91,7 +91,31 @@ The SDK supports various NEAR wallets:
     const estimateResult: EstimateGasResult = await estimateBtcGas(fromAmount, feeRate, fromAddress, env);
     
     if (nearWalletType === 'btc-wallet') {
-        const respTransaction:ContractRepParams = await BtcOriginHandler.handle( {
+        type RepParams = {
+                receivePreDepositMsg: {},
+                transaction: {
+                amount: string,
+                env: 'mainnet' | 'testnet',
+                feeRate: number | string,
+                pollResult: boolean,
+                newAccountMinDepositAmount: boolean,
+            }
+        } 
+
+        type RepParamsNotBtc = {
+             receivePreDepositMsg:  {
+                nearAddress: string;
+                depositType: number;
+             },
+            transaction: {
+                btnTempAddress: string;
+                _fromAmount: string;
+                feeRate: number;
+            }
+        }
+
+
+        const respTransaction:RepParams | RepParamsNotBtc = await BtcOriginHandler.handle( {
             fromAmount,
             fromAddress,
             toAddress,
@@ -150,11 +174,6 @@ The SDK supports various NEAR wallets:
             fromAddress,
             toAddress,
             slippage = 0.05,
-            fromTokenAddress,
-            toTokenAddress,
-            fromTokenDecimals = 18,
-            toTokenDecimals = 8,
-            walletId = 'my-near-wallet',
             feeRate = 6,
             env = 'mainnet',
             nearWalletType = 'btc-wallet'
@@ -184,11 +203,6 @@ The SDK supports various NEAR wallets:
             fromAddress,
             toAddress,
             slippage = 0.05,
-            fromTokenAddress,
-            toTokenAddress,
-            fromTokenDecimals = 18,
-            toTokenDecimals = 8,
-            walletId = 'my-near-wallet',
             feeRate = 6,
             env = 'mainnet',
             nearWalletType = 'btc-wallet'
