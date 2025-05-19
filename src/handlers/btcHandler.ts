@@ -50,6 +50,8 @@ export const BtcHandler = {
 
           const baseRegisterTransaction = await registerToken(ABTC_ADDRESS, toAddress);
 
+          console.log('baseRegisterTransaction', baseRegisterTransaction,ABTC_ADDRESS, toAddress )
+
           const registerMsg = baseRegisterTransaction ? 
               {
                 receivePreDepositMsg: params,
