@@ -42,7 +42,7 @@ The SDK supports various NEAR wallets:
 
 | Parameter | Description | Type | Default |
 |-----------|-------------|------|---------|
-| fromAmount | The amount you want to bridge | number/string | - |
+| fromAmount | The amount you want to bridge | number/string (without decimals) | - |
 | fromAddress | Your source asset address | string | - |
 | toAddress | Your destination address | string | - |
 | feeRate | BTC transaction fee rate:<br/>- 5: fast<br/>- 6: average<br/>- 7: slow<br/>- 0: custom | number | 6 |
