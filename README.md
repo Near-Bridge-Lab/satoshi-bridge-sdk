@@ -290,13 +290,8 @@ The SDK supports various NEAR wallets:
         fromAddress,
         toAddress,
         slippage = 0.05,
-        fromTokenAddress = ABTC_ADDRESS,
-        toTokenAddress = NBTC_ADDRESS,
-        fromTokenDecimals = 18,
-        toTokenDecimals = 8,
         walletId = 'my-near-wallet',
         feeRate = 6,
-        isABTC = true,
         env = 'mainnet'
     })
     const hash = await wallet.signAndSendTransactions(respTransaction)

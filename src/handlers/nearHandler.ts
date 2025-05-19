@@ -44,13 +44,8 @@ export const NearHandler = {
     fromAddress,
     toAddress,
     slippage = 0.05,
-    fromTokenAddress = ABTC_ADDRESS,
-    toTokenAddress = NBTC_ADDRESS,
-    fromTokenDecimals = 18,
-    toTokenDecimals = 8,
     walletId = 'my-near-wallet',
     feeRate = 6,
-    isABTC = true,
     env = 'mainnet'
   }: {
     fromAmount: string,
@@ -58,12 +53,7 @@ export const NearHandler = {
     toAddress: string,
     walletId: string,
     slippage?: number,
-    fromTokenAddress?: string,
-    toTokenAddress?: string,
-    fromTokenDecimals?: number,
-    toTokenDecimals?: number,
     feeRate?: number,
-    isABTC?: boolean,
     env?: string
   }): Promise<Array<NearHandleResp> | {
     isError: boolean,
@@ -71,13 +61,15 @@ export const NearHandler = {
   }> {
             const proxyContract = env === 'testnet' ? 'vastdress3984.near' : 'abtc-satoshi.sproxy.near'
             const nBtcInOut:any = {};
+            const fromTokenAddress = '31761a152f1e96f966c041291644129144233b0b.factory.bridge.near'
+            const toTokenAddress = env === 'testnet' ? 'nbtc.toalice.near' : 'nbtc.bridge.near'
             // First query the swap to get expected output amount
             const querySwapRes = await querySwap({
                 tokenIn: fromTokenAddress,
                 tokenOut: toTokenAddress,
                 amountIn: fromAmount,
-                tokenInDecimals: fromTokenDecimals,
-                tokenOutDecimals: toTokenDecimals,
+                tokenInDecimals: 18,
+                tokenOutDecimals: 8,
                 slippage: slippage > 0.2 ? 0.2 : slippage,
             })
             // const baseRegisterTransaction = await registerToken(ABTC_ADDRESS, fromAddress);
@@ -88,7 +80,7 @@ export const NearHandler = {
                 fromAddress,
                 toAddress,
                 walletId,
-                isABTC,
+                true,
                 feeRate,
                 env
             );

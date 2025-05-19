@@ -180,7 +180,7 @@ export const NearOriginHandler = {
     // })
 
     return {
-        receiverId: 'nbtc.bridge.near',
+            receiverId: 'nbtc.bridge.near',
             actions: [
             {
                 type: "FunctionCall",
