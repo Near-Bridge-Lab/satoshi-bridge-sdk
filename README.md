@@ -249,3 +249,16 @@ The SDK supports various NEAR wallets:
     await updateWithdraw(hash)
 ```
 
+### Status
+```js
+ import { fetchTransactionStatus } from 'satoshi-bridge-sdk'
+
+ const res = await fetchTransactionStatus({
+    hash: '',
+    chainId: '1' | '2' (btc to near: 1, near to btc: 2),
+    signature:  // withdraw nbtc can get signature from viewMethod
+ })
+
+ success: res.result_data.Status === 4 
+
+```
