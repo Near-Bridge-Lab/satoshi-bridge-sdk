@@ -59,19 +59,19 @@ export const BtcHandler = {
               slippage: slippage > 0.2 ? 0.2 : slippage,
           });
 
-            const hash: any = await executeBTCDepositAndAction({
-                amount: _fromAmount.toString(),
-                env: (env || 'testnet') as any,
-                feeRate,
-                pollResult: false,
-                newAccountMinDepositAmount: false,
-                action: {
-                    receiver_id: 'v2.ref-finance.near',
-                    amount: new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
-                    msg: action.args.msg,
-                },
-                registerContractId: ABTC_ADDRESS,
-            });
+            // const hash: any = await executeBTCDepositAndAction({
+            //     amount: _fromAmount.toString(),
+            //     env: (env || 'testnet') as any,
+            //     feeRate,
+            //     pollResult: false,
+            //     newAccountMinDepositAmount: false,
+            //     action: {
+            //         receiver_id: 'v2.ref-finance.near',
+            //         amount: new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
+            //         msg: action.args.msg,
+            //     },
+            //     registerContractId: ABTC_ADDRESS,
+            // });
             
             
             return  {
