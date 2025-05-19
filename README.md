@@ -169,7 +169,25 @@ The SDK supports various NEAR wallets:
 
 
     if (nearWalletType === 'btc-wallet') {
-        const respTransaction:ContractRepParams = await BtcHandler.handle( {
+        type ContractRep = {
+              receivePreDepositMsg: {};
+              transaction: {
+                amount: string;
+                env: 'mainnet' | 'testnet';
+                feeRate: string | number;
+                pollResult: boolean;
+                newAccountMinDepositAmount: boolean;
+                action: {
+                    receiver_id: string;
+                    amount: string;
+                    msg: string;
+                };
+                registerContractId?: string;
+              }
+            }
+
+
+        const respTransaction:ContractRep = await BtcHandler.handle( {
             fromAmount,
             fromAddress,
             toAddress,
@@ -178,19 +196,10 @@ The SDK supports various NEAR wallets:
             env = 'mainnet',
             nearWalletType = 'btc-wallet'
         })
-
-        // important
-        if (notRegistered) {
-              const hash: string = await executeBTCDepositAndAction({
+      
+         const hash: string = await executeBTCDepositAndAction({
                 ...respTransaction.transaction,
-                registerContractId: ABTC_ADDRESS,
-            })
-        } else {
-            const hash: string = await executeBTCDepositAndAction({
-                ...respTransaction.transaction,
-            })
-        }
-        // executeBTCDepositAndAction has help to receivePreDepositMsg and receiveDepositMsg
+        })
 
     } else {
         // you must confrim the token is not registered in NEAR 
@@ -231,6 +240,7 @@ The SDK supports various NEAR wallets:
         fromAmount,
         fromAddress,
         toAddress,
+        walletId,
         feeRate,
         env,
     })
@@ -276,3 +286,14 @@ The SDK supports various NEAR wallets:
  success: res.result_data.Status === 4 
 
 ```
+<!-- 
+### Valid
+```js
+ import {validateAmount} from 'satoshi-bridge-sdk'
+ const res = await validateAmount({
+    fromAmount,
+    walletType: 'NEAR' || 'BTC',
+    tokenBalance,
+    max
+ })
+``` -->

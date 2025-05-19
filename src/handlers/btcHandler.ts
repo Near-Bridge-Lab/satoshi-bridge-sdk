@@ -6,6 +6,7 @@ import { executeBTCDepositAndAction } from 'btc-wallet';
 import { balanceFormatedWithoutRound } from '../utils/formatter';
 import { ABTC_ADDRESS, NBTC_ADDRESS,THIRTY_TGAS } from '../constants';
 import { estimateBtcGas } from '../utils/btc';
+import { registerToken } from '../utils/transaction';
 
 export const BtcHandler = {
 
@@ -37,8 +38,6 @@ export const BtcHandler = {
   const estimateResult = await estimateBtcGas(new Big(fromAmount).mul(10 ** 8).toNumber(), feeRate, fromAddress, env as 'mainnet' | 'testnet')
 
     if (nearWalletType === 'btc-wallet') {
-    
-
         // Generate swap transaction
           const action = await generateTransaction({
               tokenIn: NBTC_ADDRESS,
@@ -49,22 +48,26 @@ export const BtcHandler = {
               slippage: slippage > 0.2 ? 0.2 : slippage,
           });
 
-            // const hash: any = await executeBTCDepositAndAction({
-            //     amount: _fromAmount.toString(),
-            //     env: (env || 'testnet') as any,
-            //     feeRate,
-            //     pollResult: false,
-            //     newAccountMinDepositAmount: false,
-            //     action: {
-            //         receiver_id: 'v2.ref-finance.near',
-            //         amount: new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
-            //         msg: action.args.msg,
-            //     },
-            //     registerContractId: ABTC_ADDRESS,
-            // });
-            
-            
-            return  {
+          const baseRegisterTransaction = await registerToken(ABTC_ADDRESS, toAddress);
+
+          const registerMsg = baseRegisterTransaction ? 
+              {
+                receivePreDepositMsg: params,
+                transaction: {
+                  amount: _fromAmount.toString(),
+                  env: (env || 'testnet') as any,
+                  feeRate,
+                  pollResult: false,
+                  newAccountMinDepositAmount: false,
+                  action: {
+                      receiver_id: 'v2.ref-finance.near',
+                      amount: new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
+                      msg: action.args.msg,
+                  },
+                  registerContractId: ABTC_ADDRESS,
+                }
+              }
+            :  {
               receivePreDepositMsg: params,
               transaction: {
                 amount: _fromAmount.toString(),
@@ -77,9 +80,10 @@ export const BtcHandler = {
                     amount: new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
                     msg: action.args.msg,
                 },
-                // registerContractId: ABTC_ADDRESS,
               }
             }
+            
+            return registerMsg;
         
     } else {
         const action = await generateTransaction({
