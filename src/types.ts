@@ -73,14 +73,14 @@ export interface BridgeConfig {
   
 export interface EstimateGasResult {
     gasFee: number;
-    withdrawFee?: number;
-    isError?: boolean;
-    errorMsg?: string;
-    receiveAmount?: string;
-    realAmount?: string;
-    utxosInput?: any[];
-    networkFee?: number | string,
-    isSuccess?: boolean,
+    withdrawFee: number;
+    isError: boolean;
+    errorMsg: string;
+    receiveAmount: string;
+    realAmount: string;
+    utxosInput: any[];
+    networkFee: number | string;
+    isSuccess: boolean;
 }
 
 export interface QuerySwapParams {

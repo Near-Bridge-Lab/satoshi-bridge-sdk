@@ -5,7 +5,8 @@
  import coinselect from 'coinselect';
  import { calculateGasLimit } from 'btc-wallet'
 
- export async function estimateNearGas(_satoshis: string | number, fromAddress: string,toAddress: string, walletType: string, isABTC?: boolean, feeRate?: number, env?: string) {
+ export async function estimateNearGas(_satoshis: string | number, fromAddress: string,toAddress: string, walletType: string, isABTC?: boolean, feeRate?: number, env?: string, useDecimals?: boolean) {
+    const _satoshisNew = useDecimals ? new Big(_satoshis).mul(10 ** 8).toString() : _satoshis
     try {
         let gasLimit: any = 0
         const activeToken = isABTC ? ABTC_ADDRESS : NBTC_ADDRESS
@@ -41,11 +42,11 @@
             }
         }
 
-        let satoshis = Number(_satoshis)
+        let satoshis = Number(_satoshisNew)
 
 
         if (gasLimit > 0) {
-            satoshis = new Big(_satoshis).minus(gasLimit).toNumber()
+            satoshis = new Big(_satoshisNew).minus(gasLimit).toNumber()
         }
 
         // Get bridge configuration
