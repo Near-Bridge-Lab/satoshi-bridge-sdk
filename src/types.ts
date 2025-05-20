@@ -81,6 +81,8 @@ export interface EstimateGasResult {
     utxosInput: any[];
     networkFee: number | string;
     isSuccess: boolean;
+    inputs: any[];
+    outputs: any[];
 }
 
 export interface QuerySwapParams {
