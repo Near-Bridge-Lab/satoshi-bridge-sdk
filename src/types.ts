@@ -71,7 +71,7 @@ export interface BridgeConfig {
     btcAddress: string;
   }
   
-  export interface EstimateGasResult {
+export interface EstimateGasResult {
     gasFee: number;
     withdrawFee?: number;
     isError?: boolean;
@@ -79,9 +79,9 @@ export interface BridgeConfig {
     receiveAmount?: string;
     realAmount?: string;
     utxosInput?: any[];
-  }
-
-
+    networkFee?: number | string,
+    isSuccess?: boolean,
+}
 
 export interface QuerySwapParams {
     tokenIn: string;
@@ -94,7 +94,7 @@ export interface QuerySwapParams {
     tokenOutDecimals?: number;
   }
 
-  export interface NearQuerySwapResponse {
+export interface NearQuerySwapResponse {
     routes: {
       pools: {
         pool_id: string;
@@ -113,3 +113,84 @@ export interface QuerySwapParams {
     amount_in: string;
     amount_out: string;
   }
+
+
+  export interface NearHandleResp {
+      receiverId: string;
+      actions: [
+          {
+              type: string;
+              params: {
+                  methodName: string;
+                  args: {
+                      receiver_id: string;
+                      amount: string;
+                      msg: string;
+                  },
+                  gas: string;
+                  deposit: string;
+              },
+          }
+      ]
+  }
+
+
+export interface  NearOriginHandleResp {
+      receiverId: string;
+      actions: [
+          {
+              type: string;
+              params: {
+                  methodName: string;
+                  args: {
+                      receiver_id: string;
+                      amount: string;
+                      msg: string;
+                  },
+                  gas: string;
+                  deposit: string;
+              },
+          },
+      ],
+  }
+
+
+export interface RepParams {
+    receivePreDepositMsg: {};
+    transaction: {
+      amount: string;
+      env: 'mainnet' | 'testnet';
+      feeRate: number | string;
+      pollResult: boolean;
+      newAccountMinDepositAmount: boolean;
+  }
+} 
+
+export interface RepParamsNotBtc {
+  receivePreDepositMsg:  {
+      nearAddress: string;
+      depositType: number;
+  };
+  transaction: {
+      btnTempAddress: string;
+      _fromAmount: string;
+      feeRate: number;
+  }
+}
+
+export interface ContractRep {
+  receivePreDepositMsg: {};
+  transaction: {
+    amount: string;
+    env: 'mainnet' | 'testnet';
+    feeRate: string | number;
+    pollResult: boolean;
+    newAccountMinDepositAmount: boolean;
+    action: {
+        receiver_id: string;
+        amount: string;
+        msg: string;
+    };
+    registerContractId?: string;
+  }
+}

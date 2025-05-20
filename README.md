@@ -64,41 +64,11 @@ The SDK supports various NEAR wallets:
     import { executeBTCDepositAndAction, useBTCProvider } from 'btc-wallet'
     import { BtcOriginHandler, estimateBtcGas, receivePreDepositMsg,receiveDepositMsg } from 'satoshi-bridge-sdk'
 
-    type EstimateGasResult = {
-         networkFee: number,
-         fee: number,
-         realAmount: string,
-         receiveAmount: string,
-         isSuccess: boolean,
-    }
 
     //you can estimate the gas fee
     const estimateResult: EstimateGasResult = await estimateBtcGas(fromAmount, feeRate, fromAddress, env, useDecmials);
     
     if (nearWalletType === 'btc-wallet') {
-        type RepParams = {
-                receivePreDepositMsg: {},
-                transaction: {
-                amount: string,
-                env: 'mainnet' | 'testnet',
-                feeRate: number | string,
-                pollResult: boolean,
-                newAccountMinDepositAmount: boolean,
-            }
-        } 
-
-        type RepParamsNotBtc = {
-             receivePreDepositMsg:  {
-                nearAddress: string;
-                depositType: number;
-             },
-            transaction: {
-                btnTempAddress: string;
-                _fromAmount: string;
-                feeRate: number;
-            }
-        }
-
 
         const respTransaction:RepParams | RepParamsNotBtc = await BtcOriginHandler.handle( {
             fromAmount,
@@ -154,23 +124,6 @@ The SDK supports various NEAR wallets:
 
 
     if (nearWalletType === 'btc-wallet') {
-        type ContractRep = {
-              receivePreDepositMsg: {};
-              transaction: {
-                amount: string;
-                env: 'mainnet' | 'testnet';
-                feeRate: string | number;
-                pollResult: boolean;
-                newAccountMinDepositAmount: boolean;
-                action: {
-                    receiver_id: string;
-                    amount: string;
-                    msg: string;
-                };
-                registerContractId?: string;
-              }
-            }
-
 
         const respTransaction:ContractRep = await BtcHandler.handle( {
             fromAmount,
@@ -219,24 +172,6 @@ The SDK supports various NEAR wallets:
 ```js
     import { NearOriginHandler, estimateNearGas, updateWithdraw } from 'satoshi-bridge-sdk'
 
-    type NearOriginHandleResp ={
-        receiverId: string;
-        actions: [
-            {
-                type: string;
-                params: {
-                    methodName: string;
-                    args: {
-                        receiver_id: string;
-                        amount: string;
-                        msg: string;
-                    },
-                    gas: string;
-                    deposit: string;
-                },
-            },
-        ],
-    }
 
     const estimateResult:EstimateGasResult = await estimateNearGas(fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env);
 
@@ -260,24 +195,6 @@ The SDK supports various NEAR wallets:
 ```js
     import { NearHandler, estimateNearGas, updateWithdraw } from 'satoshi-bridge-sdk'
 
-    type NearHandleResp = {
-        receiverId: string;
-        actions: [
-            {
-                type: string;
-                params: {
-                    methodName: string;
-                    args: {
-                        receiver_id: string;
-                        amount: string;
-                        msg: string;
-                    },
-                    gas: string;
-                    deposit: string;
-                },
-            }
-        ]
-    }
 
     const estimateResult:EstimateGasResult = await estimateNearGas(fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env);
     

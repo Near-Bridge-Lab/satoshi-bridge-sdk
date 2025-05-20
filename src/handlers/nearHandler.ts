@@ -11,26 +11,8 @@ import * as bitcoin from 'bitcoinjs-lib';
 import ecc from '@bitcoinerlab/secp256k1';
 import {getNetworkConfig} from '../constants'
 import { parseAmount, uint8ArrayToHex } from '../utils/formatter';
+import { NearHandleResp } from '../types';
 
-
-type NearHandleResp = {
-    receiverId: string;
-    actions: [
-        {
-            type: string;
-            params: {
-                methodName: string;
-                args: {
-                    receiver_id: string;
-                    amount: string;
-                    msg: string;
-                },
-                gas: string;
-                deposit: string;
-            },
-        }
-    ]
-}
 
 
 
