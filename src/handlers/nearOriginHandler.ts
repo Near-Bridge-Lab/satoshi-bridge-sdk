@@ -60,12 +60,15 @@ export const NearOriginHandler = {
     let isError = false;
 
     const estimateResult = await estimateNearGas(
-        new Big(fromAmount).mul(10 ** 8).toString(),
+       {
+        _satoshis: new Big(fromAmount).mul(10 ** 8).toString(),
         fromAddress,
         toAddress,
-        walletId,
-        false,
-        feeRate
+        walletType: walletId,
+        isABTC: false,
+        feeRate,
+        env
+       }
     );
 
     if (!estimateResult || estimateResult.isError) {

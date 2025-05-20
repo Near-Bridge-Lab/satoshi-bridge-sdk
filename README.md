@@ -173,7 +173,9 @@ The SDK supports various NEAR wallets:
     import { NearOriginHandler, estimateNearGas, updateWithdraw } from 'satoshi-bridge-sdk'
 
 
-    const estimateResult:EstimateGasResult = await estimateNearGas(fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env);
+    const estimateResult:EstimateGasResult = await estimateNearGas({
+        fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals
+    });
 
     const respTransaction:Promise<NearOriginHandleResp | {
         isError: boolean,
@@ -196,7 +198,9 @@ The SDK supports various NEAR wallets:
     import { NearHandler, estimateNearGas, updateWithdraw } from 'satoshi-bridge-sdk'
 
 
-    const estimateResult:EstimateGasResult = await estimateNearGas(fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env);
+    const estimateResult:EstimateGasResult = await estimateNearGas({
+        fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals
+    });
     
 
     const respTransaction:Promise<Array<NearHandleResp> | {

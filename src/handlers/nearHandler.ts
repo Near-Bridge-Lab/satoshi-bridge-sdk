@@ -58,13 +58,15 @@ export const NearHandler = {
             const satoshis = (querySwapRes as any).amount_out
             // const account_id = toAddress;
             const estimateResult = await estimateNearGas(
-                Number(satoshis),
-                fromAddress,
-                toAddress,
-                walletId,
-                true,
-                feeRate,
-                env
+                {
+                    _satoshis: Number(satoshis),
+                    fromAddress,
+                    toAddress,
+                    walletType: walletId,
+                    isABTC: true,
+                    feeRate,
+                    env
+                }
             );
 
             if (!estimateResult || estimateResult.isError) {

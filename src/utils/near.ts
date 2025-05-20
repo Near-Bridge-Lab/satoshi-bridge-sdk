@@ -5,7 +5,18 @@
  import coinselect from 'coinselect';
  import { calculateGasLimit } from 'btc-wallet'
 
- export async function estimateNearGas(_satoshis: string | number, fromAddress: string,toAddress: string, walletType: string, isABTC?: boolean, feeRate?: number, env?: string, useDecimals?: boolean) {
+ export async function estimateNearGas({
+    _satoshis, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals
+ }: {
+    _satoshis: string | number;
+    fromAddress: string;
+    toAddress: string; 
+    walletType: string; 
+    isABTC?: boolean; 
+    feeRate?: number; 
+    env?: string; 
+    useDecimals?: boolean
+ }) {
     const _satoshisNew = useDecimals ? new Big(_satoshis).mul(10 ** 8).toString() : _satoshis
     try {
         let gasLimit: any = 0
