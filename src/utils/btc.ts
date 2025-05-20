@@ -6,7 +6,11 @@ import { viewMethod,getAccountInfo} from './transaction';
 import coinselect from 'coinselect';
 import { calculateGasLimit } from 'btc-wallet'
 
-export const estimateBtcGas = async (fromAmount: number, feeRate: number, account: string, env: 'mainnet' | 'testnet') => {
+export const estimateBtcGas = async (fromAmount: number | string, feeRate: number, account: string, env: 'mainnet' | 'testnet', useDecimals: boolean = false) => {
+
+    const _fMount = useDecimals ? new Big(fromAmount).mul(10 ** 8).toString() : fromAmount 
+
+
     const metaData = await viewMethod({
         method: 'get_config',
         args: {}
@@ -20,7 +24,7 @@ export const estimateBtcGas = async (fromAmount: number, feeRate: number, accoun
         newAccountMinDepositAmount
 
     } = await getDepositAmount(
-        String(fromAmount),
+        String(_fMount),
         {
             env: (env || 'mainnet') as any
         }
@@ -32,7 +36,7 @@ export const estimateBtcGas = async (fromAmount: number, feeRate: number, accoun
 
     let { inputs, outputs, fee } = coinselect(
         utxos,
-        [{ address: '', value: Number(fromAmount)}],
+        [{ address: '', value: Number(_fMount)}],
         Math.ceil(feeRate),
     );
 
@@ -41,7 +45,7 @@ export const estimateBtcGas = async (fromAmount: number, feeRate: number, accoun
     return {
         networkFee: fee,
         fee: Number(protocolFee) + Number(repayAmount),
-        realAmount: fromAmount,
+        realAmount: _fMount,
         receiveAmount: new Big(receiveAmount).div(10 ** 8).toString(),
         isSuccess: true,
     }

@@ -73,7 +73,7 @@ The SDK supports various NEAR wallets:
     }
 
     //you can estimate the gas fee
-    const estimateResult: EstimateGasResult = await estimateBtcGas(fromAmount, feeRate, fromAddress, env);
+    const estimateResult: EstimateGasResult = await estimateBtcGas(fromAmount, feeRate, fromAddress, env, useDecmials);
     
     if (nearWalletType === 'btc-wallet') {
         type RepParams = {
