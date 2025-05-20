@@ -66,7 +66,9 @@ The SDK supports various NEAR wallets:
 
 
     //you can estimate the gas fee
-    const estimateResult: EstimateGasResult = await estimateBtcGas(fromAmount, feeRate, fromAddress, env, useDecmials);
+    const estimateResult: EstimateGasResultBTC = await estimateBtcGas({
+        fromAmount, feeRate, fromAddress, env, useDecmials
+    });
     
     if (nearWalletType === 'btc-wallet') {
 
@@ -109,15 +111,11 @@ The SDK supports various NEAR wallets:
 ```js
     import { executeBTCDepositAndAction, useBTCProvider } from 'btc-wallet'
     import { BtcHandler, estimateBtcGas, receivePreDepositMsg,receiveDepositMsg } from 'satoshi-bridge-sdk'
-    type EstimateGasResult = {
-         networkFee: number,
-         fee: number,
-         realAmount: string,
-         receiveAmount: string,
-         isSuccess: boolean,
-    }
+  
      //you can estimate the gas fee
-    const estimateResult: EstimateGasResult = await estimateBtcGas(fromAmount, feeRate, fromAddress, env);
+    const estimateResult: EstimateGasResultBTC = await estimateBtcGas({
+        fromAmount, feeRate, fromAddress, env, useDecmials
+    });
 
     // you must confrim the token is not registered in NEAR 
     // registerContractId: ABTC_ADDRESS 
@@ -173,7 +171,7 @@ The SDK supports various NEAR wallets:
     import { NearOriginHandler, estimateNearGas, updateWithdraw } from 'satoshi-bridge-sdk'
 
 
-    const estimateResult:EstimateGasResult = await estimateNearGas({
+    const estimateResult:EstimateGasResultNear | EstimateGasResultNearErr = await estimateNearGas({
         fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals
     });
 
@@ -198,7 +196,7 @@ The SDK supports various NEAR wallets:
     import { NearHandler, estimateNearGas, updateWithdraw } from 'satoshi-bridge-sdk'
 
 
-    const estimateResult:EstimateGasResult = await estimateNearGas({
+    const estimateResult:EstimateGasResultNear | EstimateGasResultNearErr = await estimateNearGas({
         fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals
     });
     

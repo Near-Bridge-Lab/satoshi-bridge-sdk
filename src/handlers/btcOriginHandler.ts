@@ -1,11 +1,7 @@
 // src/handlers/btcHandler.ts
 import Big from 'big.js';
-import { BridgeConfig, BtcHandleParams, EstimateGasResult } from '../types';
 import { viewMethod,generateTransaction } from '../utils/transaction';
-import { executeBTCDepositAndAction } from 'btc-wallet';
 import { balanceFormatedWithoutRound } from '../utils/formatter';
-import { ABTC_ADDRESS, NBTC_ADDRESS,THIRTY_TGAS } from '../constants';
-import { estimateBtcGas } from '../utils/btc';
 
 export const BtcOriginHandler = {
 

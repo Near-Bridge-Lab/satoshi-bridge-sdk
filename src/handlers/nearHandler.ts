@@ -1,15 +1,10 @@
 // src/handlers/btcHandler.ts
 import Big from 'big.js';
-import { BridgeConfig, BtcHandleParams, EstimateGasResult } from '../types';
-import { viewMethod, registerToken } from '../utils/transaction';
-import { executeBTCDepositAndAction } from 'btc-wallet';
-import { balanceFormatedWithoutRound } from '../utils/formatter';
 import { querySwap } from '../utils/transaction';
 import { ABTC_ADDRESS, NBTC_ADDRESS,THIRTY_TGAS } from '../constants';
 import { estimateNearGas } from '../utils/near';
 import * as bitcoin from 'bitcoinjs-lib';
 import ecc from '@bitcoinerlab/secp256k1';
-import {getNetworkConfig} from '../constants'
 import { parseAmount, uint8ArrayToHex } from '../utils/formatter';
 import { NearHandleResp } from '../types';
 

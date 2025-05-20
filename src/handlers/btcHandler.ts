@@ -1,8 +1,6 @@
 // src/handlers/btcHandler.ts
 import Big from 'big.js';
-import { BridgeConfig, BtcHandleParams, EstimateGasResult } from '../types';
 import { viewMethod,generateTransaction } from '../utils/transaction';
-import { executeBTCDepositAndAction } from 'btc-wallet';
 import { balanceFormatedWithoutRound } from '../utils/formatter';
 import { ABTC_ADDRESS, NBTC_ADDRESS,THIRTY_TGAS } from '../constants';
 import { estimateBtcGas } from '../utils/btc';
@@ -35,7 +33,12 @@ export const BtcHandler = {
   const params: any = {}
   const _fromAmount = +balanceFormatedWithoutRound(new Big(fromAmount).mul(10 ** 8).toString())
 
-  const estimateResult = await estimateBtcGas(new Big(fromAmount).mul(10 ** 8).toNumber(), feeRate, fromAddress, env as 'mainnet' | 'testnet')
+    const estimateResult = await estimateBtcGas({
+      fromAmount:new Big(fromAmount).mul(10 ** 8).toNumber(), 
+      feeRate, 
+      account: fromAddress, 
+      env: env as any
+    })
 
     if (nearWalletType === 'btc-wallet') {
         // Generate swap transaction

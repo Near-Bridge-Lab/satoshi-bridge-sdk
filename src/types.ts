@@ -1,40 +1,14 @@
 // src/types.ts
-export interface BridgeConfig {
-    // 核心配置
-    contractId: string;
-    nbtcToken: string;
-    abtcToken: string;
-    proxyContract?: string;
-    
-    // 网络配置
-    nearNetwork: 'mainnet' | 'testnet';
-    btcNetwork: 'mainnet' | 'testnet';
-    
-    // API 端点
-    baseUrl: string;
-    
-    // 回调函数
-    onSuccess?: (data: any) => void;
-    onError?: (error: any) => void;
-    onTransaction?: (txHash: string) => void;
-  }
   
-  export interface BridgeSDK {
-    btc: BtcHandler;
-    near: NearHandler;
-    btcOrigin: BtcOriginHandler;
-    nearOrigin: NearOriginHandler;
-  }
-  
-  // 处理程序接口
+  //
   export interface BtcHandler {
     handle(params: BtcHandleParams): Promise<string | null>;
-    estimateGas(amount: string | number): Promise<EstimateGasResult>;
+    estimateGas(amount: string | number): Promise<EstimateGasResultBTC>;
   }
   
   export interface NearHandler {
     handle(params: NearHandleParams): Promise<{signature?: string, hash?: string} | null>;
-    estimateGas(amount: string | number, btcAddress: string): Promise<EstimateGasResult>;
+    estimateGas(amount: string | number, btcAddress: string): Promise<EstimateGasResultNear>;
   }
   
   export interface BtcOriginHandler {
@@ -71,21 +45,34 @@ export interface BridgeConfig {
     btcAddress: string;
   }
   
-export interface EstimateGasResult {
-    gasFee: number;
-    withdrawFee: number;
-    isError: boolean;
-    errorMsg: string;
-    receiveAmount: string;
-    realAmount: string;
-    utxosInput: any[];
+export interface EstimateGasResultBTC {
     networkFee: number | string;
-    isSuccess: boolean;
-    inputs: any[];
-    outputs: any[];
-    withdrawFeeOrigin: number | string;
-    gasMore: number | string;
+    fee: number | string,
+    realAmount: number | string,
+    receiveAmount: number | string,
+    isSuccess: boolean,
 }
+
+export interface EstimateGasResultNear {
+  gasFee: number;
+  withdrawFee: number;
+  isError: boolean;
+  errorMsg: string;
+  receiveAmount: string;
+  utxosInput: any[];
+  inputs: any[];
+  outputs: any[];
+  withdrawFeeOrigin: number | string;
+  gasMore: number | string;
+  fromAmount: number | string;
+}
+
+export interface EstimateGasResultNearErr {
+  withdrawFee: number;
+  isError: boolean;
+  errorMsg: string;
+}
+
 
 export interface QuerySwapParams {
     tokenIn: string;

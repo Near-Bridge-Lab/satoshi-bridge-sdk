@@ -6,7 +6,19 @@ import { viewMethod,getAccountInfo} from './transaction';
 import coinselect from 'coinselect';
 import { calculateGasLimit } from 'btc-wallet'
 
-export const estimateBtcGas = async (fromAmount: number | string, feeRate: number, account: string, env: 'mainnet' | 'testnet', useDecimals: boolean = false) => {
+export const estimateBtcGas = async ({
+    fromAmount, 
+    feeRate, 
+    account, 
+    env, 
+    useDecimals = false
+}: {
+    fromAmount: number | string;
+    feeRate: number;
+    account: string;
+    env: 'mainnet' | 'testnet';
+    useDecimals?: boolean;
+}) => {
 
     const _fMount = useDecimals ? new Big(fromAmount).mul(10 ** 8).toString() : fromAmount 
 
