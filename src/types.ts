@@ -83,6 +83,8 @@ export interface EstimateGasResult {
     isSuccess: boolean;
     inputs: any[];
     outputs: any[];
+    withdrawFeeOrigin: number | string;
+    gasMore: number | string;
 }
 
 export interface QuerySwapParams {
