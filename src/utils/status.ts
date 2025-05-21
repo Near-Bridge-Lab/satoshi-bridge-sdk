@@ -27,3 +27,15 @@ export const fetchTransactionStatus = async (params: UseStatusProps): Promise<St
     const response = await fetch(url)
     return response.json()
 }
+
+
+export async function getBtcFeeRate(env:string) {
+    const rpcEndpoint = env === 'testnet' ? `https://mempool.space/testnet` : `https://mempool.space`;
+    const feeRes = await fetch(`${rpcEndpoint}/api/v1/fees/recommended`).then(res => res.json());
+
+    return {
+        fast: feeRes.fastestFee,
+        avg: feeRes.halfHourFee,
+        minimumFee: feeRes.hourFee,
+    }
+}

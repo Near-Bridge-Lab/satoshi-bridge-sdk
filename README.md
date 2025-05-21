@@ -230,6 +230,14 @@ The SDK supports various NEAR wallets:
  success: res.result_data.Status === 4 
 
 ```
+
+### Get Fee Rate
+```js
+ import {getBtcFeeRate} from 'satoshi-bridge-sdk'
+ const res = await getBtcFeeRate('mainnet')
+```
+
+
 <!-- 
 ### Valid
 ```js
