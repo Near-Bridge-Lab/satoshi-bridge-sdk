@@ -234,7 +234,7 @@
                 gasFee: newFee,
                 withdrawFee,
                 isError: true,
-                errorMsg: `Final amount too small. Minimum required: ${minWithdrawAmount}`,
+                errorMsg: `Transaction amount too small.`,
             }
         }
 
@@ -265,7 +265,7 @@
                 gasFee: newFee,
                 withdrawFee,
                 isError: true,
-                errorMsg: `Transaction amount too small. Minimum required: ${minWithdrawAmount}`,
+                errorMsg: `Transaction amount too small.`,
             }
         }
 
