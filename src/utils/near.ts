@@ -18,9 +18,10 @@
     useDecimals?: boolean
  }) {
     const _satoshisNew = useDecimals ? new Big(_satoshis).mul(10 ** 8).toString() : _satoshis
+    const NBTC_ADDRESS_NEW = env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS
     try {
         let gasLimit: any = 0
-        const activeToken = isABTC ? ABTC_ADDRESS : NBTC_ADDRESS
+        const activeToken = isABTC ? ABTC_ADDRESS : NBTC_ADDRESS_NEW
         if (walletType === 'btc-wallet' && !isABTC) {
             try {
                 gasLimit = await calculateGasLimit({

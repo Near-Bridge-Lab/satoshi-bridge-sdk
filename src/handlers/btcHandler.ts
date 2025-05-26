@@ -43,7 +43,7 @@ export const BtcHandler = {
     if (nearWalletType === 'btc-wallet') {
         // Generate swap transaction
           const action = await generateTransaction({
-              tokenIn: NBTC_ADDRESS,
+              tokenIn: env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS,
               tokenOut: ABTC_ADDRESS,
               amountIn: estimateResult.receiveAmount.toString(),
               // amountIn: fromAmount.toString(),
@@ -92,7 +92,7 @@ export const BtcHandler = {
         
     } else {
         const action = await generateTransaction({
-            tokenIn: NBTC_ADDRESS,
+            tokenIn: env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS,
             tokenOut: ABTC_ADDRESS,
             amountIn: new Big(estimateResult.receiveAmount).toString(),
             decimals: 8,

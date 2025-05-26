@@ -67,7 +67,13 @@ The SDK supports various NEAR wallets:
 
     //you can estimate the gas fee
     const estimateResult: EstimateGasResultBTC = await estimateBtcGas({
-        fromAmount, feeRate, fromAddress, env, useDecmials
+        fromAmount, 
+        feeRate, 
+        fromAddress, 
+        env, 
+        useDecmials,
+        isABTC: false, // optional
+        slippage: 0.005 // optional
     });
     
     if (nearWalletType === 'btc-wallet') {
@@ -114,7 +120,13 @@ The SDK supports various NEAR wallets:
   
      //you can estimate the gas fee
     const estimateResult: EstimateGasResultBTC = await estimateBtcGas({
-        fromAmount, feeRate, fromAddress, env, useDecmials
+        fromAmount, 
+        feeRate, 
+        fromAddress, 
+        env, 
+        useDecmials,
+        isABTC: false, // optional
+        slippage: 0.005 // optional
     });
 
     // you must confrim the token is not registered in NEAR 

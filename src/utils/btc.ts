@@ -5,19 +5,24 @@ import { viewMethod,getAccountInfo} from './transaction';
 // @ts-ignore
 import coinselect from 'coinselect';
 import { calculateGasLimit } from 'btc-wallet'
+import { querySwap } from './transaction';
 
 export const estimateBtcGas = async ({
     fromAmount, 
     feeRate, 
     account, 
     env, 
-    useDecimals = false
+    useDecimals = false,
+    slippage,
+    isABTC = false
 }: {
     fromAmount: number | string;
     feeRate: number;
     account: string;
     env: 'mainnet' | 'testnet';
     useDecimals?: boolean;
+    slippage?: number;
+    isABTC?: boolean;
 }) => {
 
     const _fMount = useDecimals ? new Big(fromAmount).mul(10 ** 8).toString() : fromAmount 
@@ -53,6 +58,25 @@ export const estimateBtcGas = async ({
     );
 
     console.log('fee:', fee, receiveAmount)
+
+
+    if (isABTC && slippage) {
+      const querySwapRes = await querySwap({
+            tokenIn: NBTC_ADDRESS || 'nbtc.bridge.near',
+            tokenOut: ABTC_ADDRESS,
+            amountIn: new Big(receiveAmount).div(10 ** 8).toString(),
+            tokenInDecimals: 8,
+            tokenOutDecimals: 18,
+            slippage: slippage > 0.2 ? 0.2 : slippage,
+        })
+        return {
+            networkFee: fee,
+            fee: Number(protocolFee) + Number(repayAmount),
+            realAmount: _fMount,
+            receiveAmount: new Big(querySwapRes.amountOut).toString(),
+            isSuccess: true,
+        }
+    }
 
     return {
         networkFee: fee,

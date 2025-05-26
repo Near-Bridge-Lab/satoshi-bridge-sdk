@@ -174,16 +174,15 @@ export const NearOriginHandler = {
     //         },
     //     ],
     // })
-
     return {
-            receiverId: 'nbtc.bridge.near',
+            receiverId: env === 'testnet' ? 'nbtc.toalice.near' : 'nbtc.bridge.near',
             actions: [
             {
                 type: "FunctionCall",
                 params: {
                     methodName: 'ft_transfer_call',
                     args: {
-                        receiver_id: 'btc-connector.bridge.near',
+                        receiver_id: env === 'testnet' ? 'brg.toalice.near' : 'btc-connector.bridge.near',
                         amount: satoshis.toString(),
                         msg: msgStr
                     },
