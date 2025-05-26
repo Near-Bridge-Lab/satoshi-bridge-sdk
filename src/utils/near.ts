@@ -23,15 +23,23 @@
     const NBTC_ADDRESS_NEW = env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS
 
    if (isABTC) {
-        const querySwapRes = await querySwap({
-            tokenIn: NBTC_ADDRESS_NEW,
-            tokenOut: ABTC_ADDRESS,
+        const querySwapRes:any = await querySwap({
+            tokenIn: ABTC_ADDRESS,
+            tokenOut: NBTC_ADDRESS_NEW,
             amountIn: new Big(_satoshisNew).div(10 ** 8).toString(),
-            tokenInDecimals: 8,
-            tokenOutDecimals: 18,
+            tokenInDecimals: 18,
+            tokenOutDecimals: 8,
             slippage: slippage ? slippage > 0.2 ? 0.2 : slippage : 0.005,
         })
-        _satoshisNew = querySwapRes.amountOut;
+        _satoshisNew = querySwapRes.amount_out;
+        console.log({
+            tokenIn: ABTC_ADDRESS,
+            tokenOut: NBTC_ADDRESS_NEW,
+            amountIn: new Big(_satoshisNew).div(10 ** 8).toString(),
+            tokenInDecimals: 18,
+            tokenOutDecimals: 8,
+            slippage: slippage ? slippage > 0.2 ? 0.2 : slippage : 0.005,
+        })
         console.log('querySwapRes:', querySwapRes)
    }
     try {
