@@ -192,7 +192,21 @@ export interface EstimateBtcGasParams {
   feeRate: number;
   account: string;
   env: 'mainnet' | 'testnet';
+  nbtcBalance: string | number;
   useDecimals?: boolean;
   isABTC?: boolean;
   slippage?: number;
+}
+
+
+export interface EstimateNearGasParams {
+  _satoshis: string | number;
+  fromAddress: string;
+  toAddress: string; 
+  walletType: string; 
+  isABTC?: boolean; 
+  feeRate?: number; 
+  env?: string; 
+  useDecimals?: boolean
+  slippage?: number
 }

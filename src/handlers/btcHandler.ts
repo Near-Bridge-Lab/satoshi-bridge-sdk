@@ -15,13 +15,15 @@ export const BtcHandler = {
       toAddress,
       slippage = 0.05,
       feeRate = 6,
+      nbtcBalance,
       env = 'mainnet',
-      nearWalletType = 'btc-wallet'
+      nearWalletType = 'btc-wallet',
     }: {
       fromAmount: string,
       fromAddress: string,
       toAddress: string,
       nearWalletType: 'btc-wallet' | 'near-wallet',
+      nbtcBalance: string | number
       slippage?: number,
       feeRate?: number,
       env?: string,
@@ -32,12 +34,13 @@ export const BtcHandler = {
 
   const params: any = {}
   const _fromAmount = +balanceFormatedWithoutRound(new Big(fromAmount).mul(10 ** 8).toString())
-
-    const estimateResult = await estimateBtcGas({
+  const needSaveNBTC = new Big(800).div(10 ** 8).minus(nbtcBalance)
+  const estimateResult = await estimateBtcGas({
       fromAmount:new Big(fromAmount).mul(10 ** 8).toNumber(), 
       feeRate, 
       account: fromAddress, 
-      env: env as any
+      env: env as any,
+      nbtcBalance
     })
 
     if (nearWalletType === 'btc-wallet') {
@@ -45,7 +48,7 @@ export const BtcHandler = {
           const action = await generateTransaction({
               tokenIn: env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS,
               tokenOut: ABTC_ADDRESS,
-              amountIn: estimateResult.receiveAmount.toString(),
+              amountIn: new Big(needSaveNBTC).lt(0) ? estimateResult.receiveAmount.toString() : new Big(estimateResult.receiveAmount).minus(needSaveNBTC).toString(),
               // amountIn: fromAmount.toString(),
               decimals: 8,
               slippage: slippage > 0.2 ? 0.2 : slippage,
@@ -66,7 +69,7 @@ export const BtcHandler = {
                   newAccountMinDepositAmount: false,
                   action: {
                       receiver_id: 'v2.ref-finance.near',
-                      amount: new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
+                      amount: new Big(needSaveNBTC).lt(0) ? new Big(estimateResult.receiveAmount).mul(10 ** 8).toString() : new Big(estimateResult.receiveAmount).minus(needSaveNBTC).mul(10 ** 8).toString(),
                       msg: action.args.msg,
                   },
                   registerContractId: ABTC_ADDRESS,
@@ -82,7 +85,7 @@ export const BtcHandler = {
                 newAccountMinDepositAmount: false,
                 action: {
                     receiver_id: 'v2.ref-finance.near',
-                    amount: new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
+                    amount: new Big(needSaveNBTC).lt(0) ? new Big(estimateResult.receiveAmount).mul(10 ** 8).toString() : new Big(estimateResult.receiveAmount).minus(needSaveNBTC).mul(10 ** 8).toString(),
                     msg: action.args.msg,
                 },
               }
@@ -94,7 +97,7 @@ export const BtcHandler = {
         const action = await generateTransaction({
             tokenIn: env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS,
             tokenOut: ABTC_ADDRESS,
-            amountIn: new Big(estimateResult.receiveAmount).toString(),
+            amountIn: new Big(needSaveNBTC).lt(0) ? new Big(estimateResult.receiveAmount).toString() : new Big(estimateResult.receiveAmount).minus(needSaveNBTC).toString(),
             decimals: 8,
             slippage: slippage > 0.2 ? 0.2 : slippage,
           });
@@ -102,7 +105,7 @@ export const BtcHandler = {
             recipient_id: toAddress,
             post_actions:[{
                 receiver_id: 'v2.ref-finance.near',
-                amount:new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
+                amount:new Big(needSaveNBTC).lt(0) ? new Big(estimateResult.receiveAmount).mul(10 ** 8).toString() : new Big(estimateResult.receiveAmount).minus(needSaveNBTC).mul(10 ** 8).toString(),
                 msg: action.args.msg,
                 gas: "50000000000000",
             }],
@@ -121,7 +124,7 @@ export const BtcHandler = {
         params.postActions = JSON.stringify([{
             receiver_id: 'v2.ref-finance.near',
             // amount: new Big(_fromAmount).minus(2000).toString(),
-            amount:new Big(estimateResult.receiveAmount).mul(10 ** 8).toString(),
+            amount:new Big(needSaveNBTC).lt(0) ? new Big(estimateResult.receiveAmount).mul(10 ** 8).toString() : new Big(estimateResult.receiveAmount).minus(needSaveNBTC).mul(10 ** 8).toString(),
             msg: action.args.msg,
             gas: "50000000000000",
         }])

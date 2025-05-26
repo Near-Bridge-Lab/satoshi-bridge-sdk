@@ -60,7 +60,8 @@ export const NearHandler = {
                     walletType: walletId,
                     isABTC: true,
                     feeRate,
-                    env
+                    env,
+                    slippage
                 }
             );
 

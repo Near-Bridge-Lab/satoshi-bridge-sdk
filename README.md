@@ -184,7 +184,11 @@ The SDK supports various NEAR wallets:
 
 
     const estimateResult:EstimateGasResultNear | EstimateGasResultNearErr = await estimateNearGas({
-        fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals
+        fromAmount, 
+        fromAddress,
+        toAddress, 
+        walletType, 
+        isABTC, feeRate, env, useDecimals,
     });
 
     const respTransaction:Promise<NearOriginHandleResp | {
@@ -209,7 +213,8 @@ The SDK supports various NEAR wallets:
 
 
     const estimateResult:EstimateGasResultNear | EstimateGasResultNearErr = await estimateNearGas({
-        fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals
+        fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals,
+        slippage
     });
     
 

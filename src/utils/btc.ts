@@ -14,12 +14,14 @@ export const estimateBtcGas = async ({
     env, 
     useDecimals = false,
     slippage,
-    isABTC = false
+    isABTC = false,
+    nbtcBalance
 }: {
     fromAmount: number | string;
     feeRate: number;
     account: string;
     env: 'mainnet' | 'testnet';
+    nbtcBalance: string | number;
     useDecimals?: boolean;
     slippage?: number;
     isABTC?: boolean;
@@ -61,10 +63,11 @@ export const estimateBtcGas = async ({
 
 
     if (isABTC && slippage) {
+      const needSaveNBTC = new Big(800).div(10 ** 8).minus(nbtcBalance)
       const querySwapRes = await querySwap({
             tokenIn: NBTC_ADDRESS || 'nbtc.bridge.near',
             tokenOut: ABTC_ADDRESS,
-            amountIn: new Big(receiveAmount).div(10 ** 8).toString(),
+            amountIn: new Big(needSaveNBTC).lt(0) ? new Big(receiveAmount).div(10 ** 8).toString() : new Big(receiveAmount).minus(needSaveNBTC).div(10 ** 8).toString(),
             tokenInDecimals: 8,
             tokenOutDecimals: 18,
             slippage: slippage > 0.2 ? 0.2 : slippage,
