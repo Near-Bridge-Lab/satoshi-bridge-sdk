@@ -185,3 +185,14 @@ export interface ContractRep {
     registerContractId?: string;
   }
 }
+
+
+export interface EstimateBtcGasParams {
+  fromAmount: string | number;
+  feeRate: number;
+  account: string;
+  env: 'mainnet' | 'testnet';
+  useDecimals?: boolean;
+  isABTC?: boolean;
+  slippage?: number;
+}

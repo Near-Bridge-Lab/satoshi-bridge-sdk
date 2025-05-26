@@ -74,7 +74,7 @@ The SDK supports various NEAR wallets:
         useDecmials,
         isABTC: false, // optional
         slippage: 0.005 // optional
-    });
+    } as EstimateBtcGasParams);
     
     if (nearWalletType === 'btc-wallet') {
 
@@ -127,7 +127,7 @@ The SDK supports various NEAR wallets:
         useDecmials,
         isABTC: false, // optional
         slippage: 0.005 // optional
-    });
+    } as EstimateBtcGasParams);
 
     // you must confrim the token is not registered in NEAR 
     // registerContractId: ABTC_ADDRESS 
