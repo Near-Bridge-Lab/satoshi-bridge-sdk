@@ -4,9 +4,10 @@
  // @ts-ignore
  import coinselect from 'coinselect';
  import { calculateGasLimit } from 'btc-wallet'
+ import { querySwap } from './transaction';
 
  export async function estimateNearGas({
-    _satoshis, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals
+    _satoshis, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals, slippage
  }: {
     _satoshis: string | number;
     fromAddress: string;
@@ -16,9 +17,23 @@
     feeRate?: number; 
     env?: string; 
     useDecimals?: boolean
+    slippage?: number
  }) {
-    const _satoshisNew = useDecimals ? new Big(_satoshis).mul(10 ** 8).toString() : _satoshis
+    let _satoshisNew = useDecimals ? new Big(_satoshis).mul(10 ** 8).toString() : _satoshis
     const NBTC_ADDRESS_NEW = env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS
+
+   if (isABTC) {
+        const querySwapRes = await querySwap({
+            tokenIn: NBTC_ADDRESS_NEW,
+            tokenOut: ABTC_ADDRESS,
+            amountIn: new Big(_satoshisNew).div(10 ** 8).toString(),
+            tokenInDecimals: 8,
+            tokenOutDecimals: 18,
+            slippage: slippage ? slippage > 0.2 ? 0.2 : slippage : 0.005,
+        })
+        _satoshisNew = querySwapRes.amountOut;
+        console.log('querySwapRes:', querySwapRes)
+   }
     try {
         let gasLimit: any = 0
         const activeToken = isABTC ? ABTC_ADDRESS : NBTC_ADDRESS_NEW
@@ -36,7 +51,7 @@
                                 params: {
                                     methodName: 'ft_transfer_call',
                                     args: {
-                                        receiver_id: 'btc-connector.bridge.near',
+                                        receiver_id: env ==='testnet' ?  'brg.toalice.near' : 'btc-connector.bridge.near',
                                         amount: '100',
                                         msg: ''
                                     },
