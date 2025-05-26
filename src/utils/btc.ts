@@ -6,6 +6,7 @@ import { viewMethod,getAccountInfo} from './transaction';
 import coinselect from 'coinselect';
 import { calculateGasLimit } from 'btc-wallet'
 import { querySwap } from './transaction';
+import { getBalance } from './transaction';
 
 export const estimateBtcGas = async ({
     fromAmount, 
@@ -15,13 +16,11 @@ export const estimateBtcGas = async ({
     useDecimals = false,
     slippage,
     isABTC = false,
-    nbtcBalance
 }: {
     fromAmount: number | string;
     feeRate: number;
     account: string;
     env: 'mainnet' | 'testnet';
-    nbtcBalance: string | number;
     useDecimals?: boolean;
     slippage?: number;
     isABTC?: boolean;
@@ -63,7 +62,9 @@ export const estimateBtcGas = async ({
 
 
     if (isABTC && slippage) {
+      const nbtcBalance = await getBalance(account,  env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS, env)
       const needSaveNBTC = new Big(800).div(10 ** 8).minus(nbtcBalance)
+      console.log('needSaveNBTC:', nbtcBalance, needSaveNBTC)
       const querySwapRes = await querySwap({
             tokenIn: NBTC_ADDRESS || 'nbtc.bridge.near',
             tokenOut: ABTC_ADDRESS,

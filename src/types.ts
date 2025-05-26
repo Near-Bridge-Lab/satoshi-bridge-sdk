@@ -192,7 +192,6 @@ export interface EstimateBtcGasParams {
   feeRate: number;
   account: string;
   env: 'mainnet' | 'testnet';
-  nbtcBalance: string | number;
   useDecimals?: boolean;
   isABTC?: boolean;
   slippage?: number;

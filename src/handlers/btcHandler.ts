@@ -5,6 +5,7 @@ import { balanceFormatedWithoutRound } from '../utils/formatter';
 import { ABTC_ADDRESS, NBTC_ADDRESS,THIRTY_TGAS } from '../constants';
 import { estimateBtcGas } from '../utils/btc';
 import { registerToken } from '../utils/transaction';
+import { getBalance } from '../utils/transaction';
 
 export const BtcHandler = {
 
@@ -15,7 +16,6 @@ export const BtcHandler = {
       toAddress,
       slippage = 0.05,
       feeRate = 6,
-      nbtcBalance,
       env = 'mainnet',
       nearWalletType = 'btc-wallet',
     }: {
@@ -23,7 +23,6 @@ export const BtcHandler = {
       fromAddress: string,
       toAddress: string,
       nearWalletType: 'btc-wallet' | 'near-wallet',
-      nbtcBalance: string | number
       slippage?: number,
       feeRate?: number,
       env?: string,
@@ -34,13 +33,14 @@ export const BtcHandler = {
 
   const params: any = {}
   const _fromAmount = +balanceFormatedWithoutRound(new Big(fromAmount).mul(10 ** 8).toString())
+  const nbtcBalance = await getBalance(fromAddress,  env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS, env)
   const needSaveNBTC = new Big(800).div(10 ** 8).minus(nbtcBalance)
+  console.log('nbtcBalance:', nbtcBalance, needSaveNBTC)
   const estimateResult = await estimateBtcGas({
       fromAmount:new Big(fromAmount).mul(10 ** 8).toNumber(), 
       feeRate, 
       account: fromAddress, 
       env: env as any,
-      nbtcBalance
     })
 
     if (nearWalletType === 'btc-wallet') {
