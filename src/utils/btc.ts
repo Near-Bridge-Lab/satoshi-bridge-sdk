@@ -63,7 +63,7 @@ export const estimateBtcGas = async ({
 
     if (isABTC && slippage) {
       const nbtcBalance = await getBalance(account,  env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS, env)
-      const needSaveNBTC = new Big(800).div(10 ** 8).minus(nbtcBalance)
+      const needSaveNBTC = new Big(800).minus(nbtcBalance)
       console.log('needSaveNBTC:', nbtcBalance, needSaveNBTC)
       const querySwapRes = await querySwap({
             tokenIn: NBTC_ADDRESS || 'nbtc.bridge.near',
