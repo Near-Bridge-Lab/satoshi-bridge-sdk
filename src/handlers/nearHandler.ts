@@ -35,7 +35,10 @@ export const NearHandler = {
   }): Promise<Array<NearHandleResp> | {
     isError: boolean,
     errorMsg: string
-  }> {
+  }> {       
+            
+            console.log(fromAmount, fromAddress, toAddress, walletId, slippage, feeRate, env, 'near handler 1>>>')
+
             const proxyContract = env === 'testnet' ? 'vastdress3984.near' : 'abtc-satoshi.sproxy.near'
             const nBtcInOut:any = {};
             const fromTokenAddress = '31761a152f1e96f966c041291644129144233b0b.factory.bridge.near'
@@ -49,6 +52,9 @@ export const NearHandler = {
                 tokenOutDecimals: 8,
                 slippage: slippage > 0.2 ? 0.2 : slippage,
             })
+
+            console.log(querySwapRes, 'near handler 2>>>')
+
             // const baseRegisterTransaction = await registerToken(ABTC_ADDRESS, fromAddress);
             const satoshis = (querySwapRes as any).amount_out
             // const account_id = toAddress;
@@ -64,6 +70,17 @@ export const NearHandler = {
                     slippage
                 }
             );
+
+            console.log(estimateResult, 'near handler 3>>>')
+
+            console.log( Number(satoshis),
+            fromAddress,
+            toAddress,
+            walletId,
+            true,
+            feeRate,
+            env,
+            slippage, 'near handler 4>>>')
 
             if (!estimateResult || estimateResult.isError) {
                 return {

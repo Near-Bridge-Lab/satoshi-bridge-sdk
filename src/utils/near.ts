@@ -19,6 +19,10 @@
     useDecimals?: boolean
     slippage?: number
  }) {
+
+    console.log(_satoshis, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals, slippage, 'estimateNearGas>>>')
+
+
     let _satoshisNew = useDecimals ? new Big(_satoshis).mul(10 ** 8).toString() : _satoshis
     const NBTC_ADDRESS_NEW = env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS
 
