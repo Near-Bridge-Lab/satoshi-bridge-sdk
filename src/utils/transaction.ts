@@ -25,6 +25,8 @@ export async function viewMethod({
   network?: string
   contractId?: string,
 }) {
+
+  console.log(method, args, contractId, network, '29>>>')
   const provider = getProvider(network);
   const res: any = await provider.query({
     request_type: "call_function",
@@ -38,6 +40,9 @@ export async function viewMethod({
 }
 
 export async function getBalance(account: string, tokenId: string, network = 'mainnet', isABTC = false) {
+  console.log(account, tokenId, network, isABTC, '41>>>')
+
+
   const provider = getProvider(network);
   
   const res: any = await provider.query({
@@ -54,6 +59,8 @@ export async function getBalance(account: string, tokenId: string, network = 'ma
   const newAmount = amount.replace(/"/g, '');
   const decimals = isABTC ? 18 : 8;
   
+  console.log(amount, newAmount, decimals, '60>>>')
+
   return parseInt(newAmount) > 0 ? (parseInt(newAmount) / (10 ** decimals)).toString() : '0';
 }
 
