@@ -33,7 +33,7 @@ export const BtcHandler = {
 
   const params: any = {}
   const _fromAmount = +balanceFormatedWithoutRound(new Big(fromAmount).mul(10 ** 8).toString())
-  const nbtcBalance = await getBalance(fromAddress,  env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS, env)
+  const nbtcBalance = await getBalance(toAddress,  env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS, env)
   const needSaveNBTC = new Big(800).div(10 ** 8).minus(nbtcBalance)
   console.log('nbtcBalance:', nbtcBalance, needSaveNBTC)
   const estimateResult = await estimateBtcGas({
