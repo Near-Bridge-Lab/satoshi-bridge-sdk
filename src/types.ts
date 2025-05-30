@@ -191,6 +191,7 @@ export interface EstimateBtcGasParams {
   fromAmount: string | number;
   feeRate: number;
   account: string;
+  toAddress: string;
   env: 'mainnet' | 'testnet';
   useDecimals?: boolean;
   isABTC?: boolean;
