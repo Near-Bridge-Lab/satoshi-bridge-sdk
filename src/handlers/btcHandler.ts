@@ -41,6 +41,7 @@ export const BtcHandler = {
       feeRate, 
       account: fromAddress, 
       env: env as any,
+      toAddress: toAddress
     })
 
     if (nearWalletType === 'btc-wallet') {

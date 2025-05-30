@@ -12,6 +12,7 @@ export const estimateBtcGas = async ({
     fromAmount, 
     feeRate, 
     account, 
+    toAddress,
     env, 
     useDecimals = false,
     slippage,
@@ -20,6 +21,7 @@ export const estimateBtcGas = async ({
     fromAmount: number | string;
     feeRate: number;
     account: string;
+    toAddress: string;
     env: 'mainnet' | 'testnet';
     useDecimals?: boolean;
     slippage?: number;
@@ -62,7 +64,7 @@ export const estimateBtcGas = async ({
 
 
     if (isABTC && slippage) {
-      const nbtcBalance = await getBalance(account,  env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS, env)
+      const nbtcBalance = await getBalance(toAddress,  env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS, env)
       const needSaveNBTC = new Big(800).minus(nbtcBalance)
       console.log('needSaveNBTC:', nbtcBalance, needSaveNBTC)
       const querySwapRes = await querySwap({
