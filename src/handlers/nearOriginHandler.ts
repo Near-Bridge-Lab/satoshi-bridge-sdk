@@ -60,7 +60,8 @@ export const NearOriginHandler = {
         walletType: walletId,
         isABTC: false,
         feeRate,
-        env
+        env,
+        useDecimals: false
        }
     );
 

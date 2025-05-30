@@ -67,7 +67,8 @@ export const NearHandler = {
                     isABTC: true,
                     feeRate,
                     env,
-                    slippage
+                    slippage,
+                    useDecimals: false
                 }
             );
 
