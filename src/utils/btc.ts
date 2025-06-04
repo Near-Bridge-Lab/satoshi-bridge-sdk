@@ -7,6 +7,7 @@ import coinselect from 'coinselect';
 import { calculateGasLimit } from 'btc-wallet'
 import { querySwap } from './transaction';
 import { getBalance } from './transaction';
+import { EstimateBtcGasParams } from '../types';
 
 export const estimateBtcGas = async ({
     fromAmount, 
@@ -16,17 +17,12 @@ export const estimateBtcGas = async ({
     env, 
     useDecimals = false,
     slippage,
-    isABTC = false,
-}: {
-    fromAmount: number | string;
-    feeRate: number;
-    account: string;
-    toAddress: string;
-    env: 'mainnet' | 'testnet';
-    useDecimals?: boolean;
-    slippage?: number;
-    isABTC?: boolean;
-}) => {
+    isCustomToken = false,
+    tokenOutMetaData = {
+        address: ABTC_ADDRESS,
+        decimals: 18,
+    },
+}: EstimateBtcGasParams) => {
 
     const _fMount = useDecimals ? new Big(fromAmount).mul(10 ** 8).toString() : fromAmount 
 
@@ -63,16 +59,16 @@ export const estimateBtcGas = async ({
     console.log('fee:', fee, receiveAmount)
 
 
-    if (isABTC && slippage) {
+    if (isCustomToken && slippage) {
       const nbtcBalance = await getBalance(toAddress,  env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS, env)
       const needSaveNBTC = new Big(800).div(10 ** 8).minus(nbtcBalance).mul(10 ** 8).toString()
       console.log('needSaveNBTC:', nbtcBalance, needSaveNBTC)
       const querySwapRes = await querySwap({
             tokenIn: NBTC_ADDRESS || 'nbtc.bridge.near',
-            tokenOut: ABTC_ADDRESS,
+            tokenOut: tokenOutMetaData.address,
             amountIn: new Big(needSaveNBTC).lt(0) ? new Big(receiveAmount).div(10 ** 8).toString() : new Big(receiveAmount).minus(needSaveNBTC).div(10 ** 8).toString(),
             tokenInDecimals: 8,
-            tokenOutDecimals: 18,
+            tokenOutDecimals: tokenOutMetaData.decimals,
             slippage: slippage > 0.2 ? 0.2 : slippage,
         })
         return {

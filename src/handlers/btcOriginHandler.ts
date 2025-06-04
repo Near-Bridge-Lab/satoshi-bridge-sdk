@@ -2,6 +2,7 @@
 import Big from 'big.js';
 import { viewMethod,generateTransaction } from '../utils/transaction';
 import { balanceFormatedWithoutRound } from '../utils/formatter';
+import {BtcOriginHandleParams} from '../types'
 
 export const BtcOriginHandler = {
 
@@ -13,14 +14,7 @@ export const BtcOriginHandler = {
       feeRate = 6,
       env = 'mainnet',
       nearWalletType = 'btc-wallet'
-    }: {
-      fromAmount: string,
-      fromAddress: string,
-      toAddress: string,
-      nearWalletType: 'btc-wallet' | 'near-wallet',
-      feeRate?: number,
-      env?: string,
-    }
+    }: BtcOriginHandleParams
   ) {
 
   let btnTempAddress

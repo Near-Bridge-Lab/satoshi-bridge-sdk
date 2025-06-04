@@ -39,8 +39,8 @@ export async function viewMethod({
   return JSON.parse(Buffer.from(res.result).toString());
 }
 
-export async function getBalance(account: string, tokenId: string, network = 'mainnet', isABTC = false) {
-  console.log(account, tokenId, network, isABTC, '41>>>')
+export async function getBalance(account: string, tokenId: string, network = 'mainnet', isCustomToken = false) {
+  console.log(account, tokenId, network, isCustomToken, '41>>>')
 
 
   const provider = getProvider(network);
@@ -57,7 +57,7 @@ export async function getBalance(account: string, tokenId: string, network = 'ma
 
   const amount = Buffer.from(res.result).toString();
   const newAmount = amount.replace(/"/g, '');
-  const decimals = isABTC ? 18 : 8;
+  const decimals = isCustomToken ? 18 : 8;
   
   console.log(amount, newAmount, decimals, '60>>>')
 

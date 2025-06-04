@@ -6,6 +6,7 @@ import { ABTC_ADDRESS, NBTC_ADDRESS,THIRTY_TGAS } from '../constants';
 import { estimateBtcGas } from '../utils/btc';
 import { registerToken } from '../utils/transaction';
 import { getBalance } from '../utils/transaction';
+import { BtcHandleParams } from '../types';
 
 export const BtcHandler = {
 
@@ -18,15 +19,11 @@ export const BtcHandler = {
       feeRate = 6,
       env = 'mainnet',
       nearWalletType = 'btc-wallet',
-    }: {
-      fromAmount: string,
-      fromAddress: string,
-      toAddress: string,
-      nearWalletType: 'btc-wallet' | 'near-wallet',
-      slippage?: number,
-      feeRate?: number,
-      env?: string,
-    }
+      tokenOutMetaData = {
+        address: ABTC_ADDRESS,
+        decimals: 18,
+      },
+      }:BtcHandleParams
   ) {
 
   let btnTempAddress
@@ -41,23 +38,24 @@ export const BtcHandler = {
       feeRate, 
       account: fromAddress, 
       env: env as any,
-      toAddress: toAddress
+      toAddress: toAddress,
+      tokenOutMetaData,
     })
 
     if (nearWalletType === 'btc-wallet') {
         // Generate swap transaction
           const action = await generateTransaction({
               tokenIn: env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS,
-              tokenOut: ABTC_ADDRESS,
+              tokenOut: tokenOutMetaData.address,
               amountIn: new Big(needSaveNBTC).lt(0) ? estimateResult.receiveAmount.toString() : new Big(estimateResult.receiveAmount).minus(needSaveNBTC).toString(),
               // amountIn: fromAmount.toString(),
               decimals: 8,
               slippage: slippage > 0.2 ? 0.2 : slippage,
           });
 
-          const baseRegisterTransaction = await registerToken(ABTC_ADDRESS, toAddress);
+          const baseRegisterTransaction = await registerToken(tokenOutMetaData.address, toAddress);
 
-          console.log('baseRegisterTransaction', baseRegisterTransaction,ABTC_ADDRESS, toAddress )
+          console.log('baseRegisterTransaction', baseRegisterTransaction,tokenOutMetaData.address, toAddress )
 
           const registerMsg = baseRegisterTransaction ? 
               {
@@ -73,7 +71,7 @@ export const BtcHandler = {
                       amount: new Big(needSaveNBTC).lt(0) ? new Big(estimateResult.receiveAmount).mul(10 ** 8).toString() : new Big(estimateResult.receiveAmount).minus(needSaveNBTC).mul(10 ** 8).toString(),
                       msg: action.args.msg,
                   },
-                  registerContractId: ABTC_ADDRESS,
+                  registerContractId: tokenOutMetaData.address,
                 }
               }
             :  {
@@ -97,7 +95,7 @@ export const BtcHandler = {
     } else {
         const action = await generateTransaction({
             tokenIn: env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS,
-            tokenOut: ABTC_ADDRESS,
+            tokenOut: tokenOutMetaData.address,
             amountIn: new Big(needSaveNBTC).lt(0) ? new Big(estimateResult.receiveAmount).toString() : new Big(estimateResult.receiveAmount).minus(needSaveNBTC).toString(),
             decimals: 8,
             slippage: slippage > 0.2 ? 0.2 : slippage,

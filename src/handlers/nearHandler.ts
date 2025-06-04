@@ -6,13 +6,17 @@ import { estimateNearGas } from '../utils/near';
 import * as bitcoin from 'bitcoinjs-lib';
 import ecc from '@bitcoinerlab/secp256k1';
 import { parseAmount, uint8ArrayToHex } from '../utils/formatter';
-import { NearHandleResp } from '../types';
+import { NearHandleResp,NearHandleParams } from '../types';
+import {stableTokenMap} from '../constants'
 
 
 
 
 bitcoin.initEccLib(ecc)
 
+type StableTokenMap = typeof stableTokenMap;
+type EnvType = keyof StableTokenMap;
+type TokenAddress = keyof StableTokenMap['testnet'] | keyof StableTokenMap['mainnet'];
 
 export const NearHandler = {
 
@@ -22,33 +26,29 @@ export const NearHandler = {
     toAddress,
     slippage = 0.05,
     walletId = 'my-near-wallet',
+    tokenInMetaData = {
+        address: ABTC_ADDRESS,
+        decimals: 18
+    },
     feeRate = 6,
     env = 'mainnet'
-  }: {
-    fromAmount: string,
-    fromAddress: string,
-    toAddress: string,
-    walletId: string,
-    slippage?: number,
-    feeRate?: number,
-    env?: string
-  }): Promise<Array<NearHandleResp> | {
+  }: NearHandleParams ): Promise<Array<NearHandleResp> | {
     isError: boolean,
     errorMsg: string
   }> {       
             
             console.log(fromAmount, fromAddress, toAddress, walletId, slippage, feeRate, env, 'near handler 1>>>')
 
-            const proxyContract = env === 'testnet' ? 'vastdress3984.near' : 'abtc-satoshi.sproxy.near'
+            const proxyContract = stableTokenMap[env as EnvType][tokenInMetaData.address as TokenAddress]
             const nBtcInOut:any = {};
-            const fromTokenAddress = '31761a152f1e96f966c041291644129144233b0b.factory.bridge.near'
+            const fromTokenAddress = tokenInMetaData.address
             const toTokenAddress = env === 'testnet' ? 'nbtc.toalice.near' : 'nbtc.bridge.near'
             // First query the swap to get expected output amount
             const querySwapRes = await querySwap({
                 tokenIn: fromTokenAddress,
                 tokenOut: toTokenAddress,
                 amountIn: fromAmount,
-                tokenInDecimals: 18,
+                tokenInDecimals: tokenInMetaData.decimals,
                 tokenOutDecimals: 8,
                 slippage: slippage > 0.2 ? 0.2 : slippage,
             })
@@ -64,11 +64,12 @@ export const NearHandler = {
                     fromAddress,
                     toAddress,
                     walletType: walletId,
-                    isABTC: true,
+                    isCustomToken: true,
                     feeRate,
                     env,
                     slippage,
-                    useDecimals: false
+                    useDecimals: false,
+                    tokenInMetaData
                 }
             );
 
@@ -196,11 +197,11 @@ export const NearHandler = {
             //     transactions.push(baseRegisterTransaction);
             // }
             
-            const parsedAmountIn = parseAmount(fromAmount, 18);
+            const parsedAmountIn = parseAmount(fromAmount, tokenInMetaData.decimals);
             
             // Add the transfer transaction
             transactions.push({
-                receiverId: ABTC_ADDRESS,
+                receiverId: tokenInMetaData.address,
                 actions: [
                     {
                         type: "FunctionCall",

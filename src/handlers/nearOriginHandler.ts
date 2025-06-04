@@ -4,6 +4,7 @@ import { ABTC_ADDRESS, NBTC_ADDRESS,THIRTY_TGAS } from '../constants';
 import { estimateNearGas } from '../utils/near';
 import * as bitcoin from 'bitcoinjs-lib';
 import { parseAmount, uint8ArrayToHex } from '../utils/formatter';
+import { NearOriginHandleParams } from '../types';
 
 
 type NearOriginHandleResp ={
@@ -36,14 +37,7 @@ export const NearOriginHandler = {
         walletId = 'my-near-wallet',
         feeRate = 6,
         env = 'mainnet'
-      }: {
-        fromAmount: string,
-        fromAddress: string,
-        toAddress: string,
-        walletId: string,
-        feeRate?: number,
-        env?: string
-      }
+      }: NearOriginHandleParams
   ): Promise<NearOriginHandleResp | {
     isError: boolean,
     errorMsg: string
@@ -58,10 +52,14 @@ export const NearOriginHandler = {
         fromAddress,
         toAddress,
         walletType: walletId,
-        isABTC: false,
+        isCustomToken: false,
         feeRate,
         env,
-        useDecimals: false
+        useDecimals: false,
+        tokenInMetaData: {
+            address:  env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS,
+            decimals: 8
+        }
        }
     );
 

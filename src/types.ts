@@ -19,30 +19,51 @@
     handle(params: NearOriginHandleParams): Promise<string | null>;
   }
   
-  // 参数接口
+  //
   export interface BtcHandleParams {
     fromAmount: string | number;
-    nearAccount: string;
-    action?: any;
-    needSaveNBTC?: any;
-    estimateResult?: any;
-    baseRegisterTransaction?: any;
+    fromAddress: string;
+    toAddress: string;
+    tokenOutMetaData: {
+      address: string;
+      decimals: number;
+    };
+    nearWalletType: 'btc-wallet' | 'near-wallet';
+    slippage?: number;
+    feeRate?: number;
+    env?: string;
   }
   
   export interface NearHandleParams {
-    fromAmount: string | number;
-    btcAddress: string;
-    selectedToken?: string;
+      fromAmount: string;
+      fromAddress: string;
+      toAddress: string;
+      walletId: string;
+      tokenInMetaData: {
+          address: string;
+          decimals: number;
+      },
+      slippage?: number;
+      feeRate?: number;
+      env?: string;
   }
   
   export interface BtcOriginHandleParams {
-    fromAmount: string | number;
-    nearAccount: string;
+    fromAmount: string;
+    fromAddress: string;
+    toAddress: string;
+    nearWalletType: 'btc-wallet' | 'near-wallet';
+    feeRate?: number;
+    env?: string;
   }
   
   export interface NearOriginHandleParams {
-    fromAmount: string | number;
-    btcAddress: string;
+        fromAmount: string;
+        fromAddress: string;
+        toAddress: string;
+        walletId: string;
+        feeRate?: number;
+        env?: string;
   }
   
 export interface EstimateGasResultBTC {
@@ -193,20 +214,28 @@ export interface EstimateBtcGasParams {
   account: string;
   toAddress: string;
   env: 'mainnet' | 'testnet';
+  tokenOutMetaData: {
+    address: string;
+    decimals: number;
+  };
   useDecimals?: boolean;
-  isABTC?: boolean;
+  isCustomToken?: boolean;
   slippage?: number;
 }
 
 
 export interface EstimateNearGasParams {
   _satoshis: string | number;
-  fromAddress: string;
-  toAddress: string; 
-  walletType: string; 
-  isABTC?: boolean; 
-  feeRate?: number; 
-  env?: string; 
-  useDecimals?: boolean
-  slippage?: number
+    fromAddress: string;
+    toAddress: string; 
+    walletType: string; 
+    tokenInMetaData: {
+        address: string;
+        decimals: number;
+    };
+    isCustomToken?: boolean; 
+    feeRate?: number; 
+    env?: string; 
+    useDecimals?: boolean;
+    slippage?: number;
 }

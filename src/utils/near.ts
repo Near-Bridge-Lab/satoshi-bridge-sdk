@@ -1,46 +1,40 @@
- import Big from 'big.js';
- import { THIRTY_TGAS, ABTC_ADDRESS, NBTC_ADDRESS } from '../constants';
- import { viewMethod,getAccountInfo} from './transaction';
- // @ts-ignore
- import coinselect from 'coinselect';
- import { calculateGasLimit } from 'btc-wallet'
- import { querySwap } from './transaction';
+import Big from 'big.js';
+import { THIRTY_TGAS, ABTC_ADDRESS, NBTC_ADDRESS } from '../constants';
+import { viewMethod,getAccountInfo} from './transaction';
+// @ts-ignore
+import coinselect from 'coinselect';
+import { calculateGasLimit } from 'btc-wallet'
+import { querySwap } from './transaction';
+import {EstimateNearGasParams} from '../types'
 
- export async function estimateNearGas({
-    _satoshis, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals, slippage
- }: {
-    _satoshis: string | number;
-    fromAddress: string;
-    toAddress: string; 
-    walletType: string; 
-    isABTC?: boolean; 
-    feeRate?: number; 
-    env?: string; 
-    useDecimals?: boolean
-    slippage?: number
- }) {
+export async function estimateNearGas({
+    _satoshis, fromAddress,toAddress, walletType, isCustomToken, feeRate, env, useDecimals, slippage,tokenInMetaData = {
+        address: ABTC_ADDRESS,
+        decimals: 18
+    }
+}: EstimateNearGasParams) {
 
-    console.log(_satoshis, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals, slippage, 'estimateNearGas>>>')
+    console.log(_satoshis, fromAddress,toAddress, walletType, isCustomToken, feeRate, env, useDecimals, slippage, 'estimateNearGas>>>')
 
 
     let _satoshisNew = useDecimals ? new Big(_satoshis).mul(10 ** 8).toString() : _satoshis
     const NBTC_ADDRESS_NEW = env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS
 
-   if (isABTC) {
+   if (isCustomToken) {
         const querySwapRes:any = await querySwap({
-            tokenIn: ABTC_ADDRESS,
+            tokenIn: tokenInMetaData.address,
             tokenOut: NBTC_ADDRESS_NEW,
             amountIn: new Big(_satoshisNew).div(10 ** 8).toString(),
-            tokenInDecimals: 18,
+            tokenInDecimals: tokenInMetaData.decimals,
             tokenOutDecimals: 8,
             slippage: slippage ? slippage > 0.2 ? 0.2 : slippage : 0.005,
         })
         _satoshisNew = querySwapRes.amount_out;
         console.log({
-            tokenIn: ABTC_ADDRESS,
+            tokenIn: tokenInMetaData.address,
             tokenOut: NBTC_ADDRESS_NEW,
             amountIn: new Big(_satoshisNew).div(10 ** 8).toString(),
-            tokenInDecimals: 18,
+            tokenInDecimals: tokenInMetaData.decimals,
             tokenOutDecimals: 8,
             slippage: slippage ? slippage > 0.2 ? 0.2 : slippage : 0.005,
         })
@@ -48,8 +42,8 @@
    }
     try {
         let gasLimit: any = 0
-        const activeToken = isABTC ? ABTC_ADDRESS : NBTC_ADDRESS_NEW
-        if (walletType === 'btc-wallet' && !isABTC) {
+        const activeToken = isCustomToken ? tokenInMetaData.address : NBTC_ADDRESS_NEW
+        if (walletType === 'btc-wallet' && !isCustomToken) {
             try {
                 gasLimit = await calculateGasLimit({
                     env: (env || 'mainnet') as any,

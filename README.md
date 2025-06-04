@@ -72,7 +72,8 @@ The SDK supports various NEAR wallets:
         fromAddress, 
         env, 
         useDecmials,
-        isABTC: false, // optional
+        tokenOutMetaData,
+        isCustomToken: false, // optional
         slippage: 0.005 // optional
     } as EstimateBtcGasParams);
     
@@ -85,7 +86,7 @@ The SDK supports various NEAR wallets:
             feeRate = 6,
             env = 'mainnet',
             nearWalletType = 'btc-wallet' // your wallet id such as 'my-near-wallet' ,'btc-wallet' , 'meteor-wallet' eg.
-        })
+        } as BtcOriginHandleParams)
 
          const hash: string = await executeBTCDepositAndAction({
             ...respTransaction.transaction
@@ -102,7 +103,7 @@ The SDK supports various NEAR wallets:
             feeRate = 6,
             env = 'mainnet',
             nearWalletType = 'btc-wallet'
-        })
+        } as BtcOriginHandleParams)
         const { btnTempAddress, _fromAmount,feeRate } = respTransaction.transaction
         await receivePreDepositMsg(params.receivePreDepositMsg)
         const hash: string = await sendBitcoin(btnTempAddress, _fromAmount, {
@@ -125,7 +126,7 @@ The SDK supports various NEAR wallets:
         fromAddress, 
         env, 
         useDecmials,
-        isABTC: false, // optional
+        isCustomToken: false, // optional
         slippage: 0.005 // optional
     } as EstimateBtcGasParams);
 
@@ -143,7 +144,7 @@ The SDK supports various NEAR wallets:
             feeRate = 6,
             env = 'mainnet',
             nearWalletType = 'btc-wallet'
-        })
+        } as BtcHandleParams)
       
          const hash: string = await executeBTCDepositAndAction({
                 ...respTransaction.transaction,
@@ -163,7 +164,7 @@ The SDK supports various NEAR wallets:
             feeRate = 6,
             env = 'mainnet',
             nearWalletType = 'btc-wallet'
-        })
+        } as BtcHandleParams)
         const { btnTempAddress, _fromAmount,feeRate } = respTransaction.transaction
         await receivePreDepositMsg(params.receivePreDepositMsg)
         const hash: string = await sendBitcoin(btnTempAddress, _fromAmount, {
@@ -188,8 +189,8 @@ The SDK supports various NEAR wallets:
         fromAddress,
         toAddress, 
         walletType, 
-        isABTC, feeRate, env, useDecimals,
-    });
+        isCustomToken, feeRate, env, useDecimals,
+    } as EstimateNearGasParams);
 
     const respTransaction:Promise<NearOriginHandleResp | {
         isError: boolean,
@@ -201,7 +202,7 @@ The SDK supports various NEAR wallets:
         walletId,
         feeRate,
         env,
-    })
+    } as NearOriginHandleParams)
    const hash = await wallet.signAndSendTransaction(respTransaction)
    await updateWithdraw(hash)
 ```
@@ -213,9 +214,9 @@ The SDK supports various NEAR wallets:
 
 
     const estimateResult:EstimateGasResultNear | EstimateGasResultNearErr = await estimateNearGas({
-        fromAmount, fromAddress,toAddress, walletType, isABTC, feeRate, env, useDecimals,
+        fromAmount, fromAddress,toAddress, walletType, isCustomToken, feeRate, env, useDecimals,
         slippage
-    });
+    } as EstimateNearGasParams);
     
 
     const respTransaction:Promise<Array<NearHandleResp> | {
@@ -229,7 +230,7 @@ The SDK supports various NEAR wallets:
         walletId = 'my-near-wallet',
         feeRate = 6,
         env = 'mainnet'
-    })
+    } as NearHandleParams)
     const hash = await wallet.signAndSendTransactions(respTransaction)
     await updateWithdraw(hash)
 ```
