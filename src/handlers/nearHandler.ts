@@ -60,7 +60,7 @@ export const NearHandler = {
             // const account_id = toAddress;
             const estimateResult = await estimateNearGas(
                 {
-                    _satoshis: Number(satoshis),
+                    _satoshis: new Big(satoshis).div(10 ** 8).mul(10 ** tokenInMetaData.decimals).toNumber(),
                     fromAddress,
                     toAddress,
                     walletType: walletId,
@@ -69,10 +69,7 @@ export const NearHandler = {
                     env,
                     slippage,
                     useDecimals: false,
-                    tokenInMetaData: {
-                        address: tokenInMetaData.address,
-                        decimals: 8
-                    }
+                    tokenInMetaData
                 }
             );
 
