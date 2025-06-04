@@ -39,3 +39,9 @@ export async function getBtcFeeRate(env:string) {
         minimumFee: feeRes.hourFee,
     }
 }
+
+
+export async function getPrice(tokenAddress: string) {
+    const price = await fetch(`https://api.ref.finance/get-token-price?token_id=${tokenAddress}`).then(res => res.json());
+    return price
+}

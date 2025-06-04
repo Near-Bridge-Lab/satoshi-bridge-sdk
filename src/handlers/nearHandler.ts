@@ -8,6 +8,7 @@ import ecc from '@bitcoinerlab/secp256k1';
 import { parseAmount, uint8ArrayToHex } from '../utils/formatter';
 import { NearHandleResp,NearHandleParams } from '../types';
 import {stableTokenMap} from '../constants'
+import {getPrice} from '../utils/status'
 
 
 
@@ -57,10 +58,22 @@ export const NearHandler = {
 
             // const baseRegisterTransaction = await registerToken(ABTC_ADDRESS, fromAddress);
             const satoshis = (querySwapRes as any).amount_out
+
+            const priceIn = await getPrice(tokenInMetaData.address)
+            const priceOut = await getPrice('2260fac5e5542a773aa44fbcfedf7c193bc2c599.factory.bridge.near')
+            
+            // Convert satoshis from priceOut token to priceIn token amount
+            const convertedAmount = new Big(satoshis)
+                .mul(priceOut)
+                .div(priceIn)
+                .div(10 ** 8)
+                .mul(10 ** tokenInMetaData.decimals)
+                .toNumber()
+
             // const account_id = toAddress;
             const estimateResult = await estimateNearGas(
                 {
-                    _satoshis: new Big(satoshis).div(10 ** 8).mul(10 ** tokenInMetaData.decimals).toNumber(),
+                    _satoshis: convertedAmount,
                     fromAddress,
                     toAddress,
                     walletType: walletId,
