@@ -17,14 +17,14 @@ export async function estimateNearGas({
     console.log(_satoshis, fromAddress,toAddress, walletType, isCustomToken, feeRate, env, useDecimals, slippage, 'estimateNearGas>>>')
 
 
-    let _satoshisNew = useDecimals ? new Big(_satoshis).mul(10 ** 8).toString() : _satoshis
+    let _satoshisNew = useDecimals ? new Big(_satoshis).mul(10 ** tokenInMetaData.decimals).toString() : _satoshis
     const NBTC_ADDRESS_NEW = env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS
 
    if (isCustomToken) {
         const querySwapRes:any = await querySwap({
             tokenIn: tokenInMetaData.address,
             tokenOut: NBTC_ADDRESS_NEW,
-            amountIn: new Big(_satoshisNew).div(10 ** 8).toString(),
+            amountIn: new Big(_satoshisNew).div(10 ** tokenInMetaData.decimals).toString(),
             tokenInDecimals: tokenInMetaData.decimals,
             tokenOutDecimals: 8,
             slippage: slippage ? slippage > 0.2 ? 0.2 : slippage : 0.005,
@@ -33,7 +33,7 @@ export async function estimateNearGas({
         console.log({
             tokenIn: tokenInMetaData.address,
             tokenOut: NBTC_ADDRESS_NEW,
-            amountIn: new Big(_satoshisNew).div(10 ** 8).toString(),
+            amountIn: new Big(_satoshisNew).div(10 ** tokenInMetaData.decimals).toString(),
             tokenInDecimals: tokenInMetaData.decimals,
             tokenOutDecimals: 8,
             slippage: slippage ? slippage > 0.2 ? 0.2 : slippage : 0.005,

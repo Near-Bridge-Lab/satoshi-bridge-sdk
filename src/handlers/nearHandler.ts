@@ -69,10 +69,7 @@ export const NearHandler = {
                     env,
                     slippage,
                     useDecimals: false,
-                    tokenInMetaData: {
-                        address: NBTC_ADDRESS,
-                        decimals: 8
-                    }
+                    tokenInMetaData
                 }
             );
 
