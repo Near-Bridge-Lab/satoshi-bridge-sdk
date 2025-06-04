@@ -59,8 +59,8 @@ export const NearHandler = {
             // const baseRegisterTransaction = await registerToken(ABTC_ADDRESS, fromAddress);
             const satoshis = (querySwapRes as any).amount_out
 
-            const priceIn = await getPrice(tokenInMetaData.address)
-            const priceOut = await getPrice('2260fac5e5542a773aa44fbcfedf7c193bc2c599.factory.bridge.near')
+            const { price: priceIn } = await getPrice(tokenInMetaData.address)
+            const { price: priceOut } = await getPrice('2260fac5e5542a773aa44fbcfedf7c193bc2c599.factory.bridge.near')
             
             // Convert satoshis from priceOut token to priceIn token amount
             const convertedAmount = new Big(satoshis)
