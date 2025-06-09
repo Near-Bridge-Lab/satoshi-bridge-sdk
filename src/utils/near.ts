@@ -6,6 +6,7 @@ import coinselect from 'coinselect';
 import { calculateGasLimit } from 'btc-wallet'
 import { querySwap } from './transaction';
 import {EstimateNearGasParams} from '../types'
+import {tokenMinAmountMap} from '../constants'
 
 export async function estimateNearGas({
     _satoshis, fromAddress,toAddress, walletType, isCustomToken, feeRate, env, useDecimals, slippage,tokenInMetaData = {
@@ -14,10 +15,25 @@ export async function estimateNearGas({
     }
 }: EstimateNearGasParams) {
 
+
+  
+
+
     console.log(_satoshis, fromAddress,toAddress, walletType, isCustomToken, feeRate, env, useDecimals, slippage, 'estimateNearGas>>>')
 
 
     let _satoshisNew = useDecimals ? new Big(_satoshis).mul(10 ** tokenInMetaData.decimals).toString() : _satoshis
+
+    const minAmountInfo = tokenMinAmountMap[tokenInMetaData.address as keyof typeof tokenMinAmountMap];
+    if (minAmountInfo && new Big(_satoshisNew).lt(minAmountInfo.amount * 10 ** tokenInMetaData.decimals)) {
+        return {
+            withdrawFee: 0,
+            isError: true,
+            errorMsg: `Invalid amount, must be greater than ${minAmountInfo.amount} ${minAmountInfo.symbol}`,
+        }
+    }
+
+
     const NBTC_ADDRESS_NEW = env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS
 
    if (isCustomToken) {
