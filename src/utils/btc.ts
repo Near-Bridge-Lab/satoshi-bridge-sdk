@@ -37,7 +37,8 @@ export const estimateBtcGas = async ({
         receiveAmount,
         protocolFee,
         repayAmount,
-        newAccountMinDepositAmount
+        newAccountMinDepositAmount,
+        minDepositAmount
 
     } = await getDepositAmount(
         String(_fMount),
@@ -46,7 +47,7 @@ export const estimateBtcGas = async ({
         }
     )
 
-    console.log('fromAmount:', receiveAmount, protocolFee, repayAmount, newAccountMinDepositAmount)
+    console.log('fromAmount:', receiveAmount, protocolFee, repayAmount, newAccountMinDepositAmount, minDepositAmount)
 
     const utxos = await getUtxo(account, env)
 
@@ -57,6 +58,13 @@ export const estimateBtcGas = async ({
     );
 
     console.log('fee:', fee, receiveAmount)
+
+    if (depositAmount < minDepositAmount) {
+        return {
+            isError: true,
+            errorMsg:`Invalid deposit amount, must be greater than ${minDepositAmount / 10 ** 8} BTC`,
+        }
+      }
 
 
     if (isCustomToken && slippage) {

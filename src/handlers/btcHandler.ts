@@ -33,7 +33,7 @@ export const BtcHandler = {
   const nbtcBalance = await getBalance(toAddress,  env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS, env)
   const needSaveNBTC = new Big(800).div(10 ** 8).minus(nbtcBalance)
   console.log('nbtcBalance:', nbtcBalance, needSaveNBTC)
-  const estimateResult = await estimateBtcGas({
+  const estimateResult:any = await estimateBtcGas({
       fromAmount:new Big(fromAmount).mul(10 ** 8).toNumber(), 
       feeRate, 
       account: fromAddress, 
@@ -41,6 +41,13 @@ export const BtcHandler = {
       toAddress: toAddress,
       tokenOutMetaData,
     })
+    
+    if (estimateResult.isError) {
+      return {
+        isError: true,
+        errorMsg: estimateResult?.errorMsg || 'Estimate gas failed'
+      };
+    }
 
     if (nearWalletType === 'btc-wallet') {
         // Generate swap transaction

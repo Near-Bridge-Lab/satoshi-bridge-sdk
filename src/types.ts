@@ -88,6 +88,12 @@ export interface EstimateGasResultNear {
   fromAmount: number | string;
 }
 
+
+export interface EstimateGasResultBTCErr {
+  isError: boolean;
+  errorMsg: string;
+}
+
 export interface EstimateGasResultNearErr {
   withdrawFee: number;
   isError: boolean;
