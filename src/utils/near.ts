@@ -25,7 +25,7 @@ export async function estimateNearGas({
     let _satoshisNew = useDecimals ? new Big(_satoshis).mul(10 ** tokenInMetaData.decimals).toString() : _satoshis
 
     const minAmountInfo = tokenMinAmountMap[tokenInMetaData.address as keyof typeof tokenMinAmountMap];
-    if (minAmountInfo && new Big(_satoshisNew).lt(minAmountInfo.amount * 10 ** tokenInMetaData.decimals)) {
+    if (minAmountInfo && !new Big(_satoshisNew).gte(minAmountInfo.amount * 10 ** tokenInMetaData.decimals)) {
         return {
             withdrawFee: 0,
             isError: true,
