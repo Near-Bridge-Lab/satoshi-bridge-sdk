@@ -244,4 +244,5 @@ export interface EstimateNearGasParams {
     env?: string; 
     useDecimals?: boolean;
     slippage?: number;
+    originAmount?: string | number;
 }

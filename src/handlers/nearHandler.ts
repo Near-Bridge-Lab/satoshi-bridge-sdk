@@ -82,7 +82,8 @@ export const NearHandler = {
                     env,
                     slippage,
                     useDecimals: false,
-                    tokenInMetaData
+                    tokenInMetaData,
+                    originAmount: fromAmount
                 }
             );
 

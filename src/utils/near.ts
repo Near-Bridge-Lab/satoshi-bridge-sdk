@@ -9,10 +9,20 @@ import {EstimateNearGasParams} from '../types'
 import {tokenMinAmountMap} from '../constants'
 
 export async function estimateNearGas({
-    _satoshis, fromAddress,toAddress, walletType, isCustomToken, feeRate, env, useDecimals, slippage,tokenInMetaData = {
-        address: ABTC_ADDRESS,
-        decimals: 18
-    }
+    _satoshis, 
+    fromAddress,
+    toAddress, 
+    walletType, 
+    isCustomToken, 
+    feeRate, 
+    env, 
+    useDecimals, 
+    slippage,
+    tokenInMetaData = {
+    address: ABTC_ADDRESS,
+    decimals: 18
+    },
+    originAmount
 }: EstimateNearGasParams) {
 
 
@@ -21,15 +31,22 @@ export async function estimateNearGas({
 
     console.log(_satoshis, fromAddress,toAddress, walletType, isCustomToken, feeRate, env, useDecimals, slippage, 'estimateNearGas>>>')
 
-
+    let _originAmount:any = 0;
+    if (originAmount) {
+        _originAmount = useDecimals ? new Big(originAmount).mul(10 ** tokenInMetaData.decimals).toString() : originAmount
+    }
     let _satoshisNew = useDecimals ? new Big(_satoshis).mul(10 ** tokenInMetaData.decimals).toString() : _satoshis
 
     const minAmountInfo = tokenMinAmountMap[tokenInMetaData.address as keyof typeof tokenMinAmountMap];
-    if (minAmountInfo && !new Big(_satoshisNew).gte(minAmountInfo.amount * 10 ** tokenInMetaData.decimals)) {
-        return {
-            withdrawFee: 0,
-            isError: true,
-            errorMsg: `Invalid amount, must be greater than ${minAmountInfo.amount} ${minAmountInfo.symbol}`,
+    
+    if (minAmountInfo) {
+        const amountToCheck = originAmount ? _originAmount : _satoshisNew;
+        if (new Big(amountToCheck).lt(minAmountInfo.amount * 10 ** tokenInMetaData.decimals)) {
+            return {
+                withdrawFee: 0,
+                isError: true,
+                errorMsg: `Invalid amount, must be greater than ${minAmountInfo.amount} ${minAmountInfo.symbol}`,
+            }
         }
     }
 
