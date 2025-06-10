@@ -59,8 +59,7 @@ export const NearOriginHandler = {
         tokenInMetaData: {
             address:  env === 'testnet' ? 'nbtc.toalice.near' : NBTC_ADDRESS,
             decimals: 8
-        },
-        originAmount: fromAmount
+        }
        }
     );
 

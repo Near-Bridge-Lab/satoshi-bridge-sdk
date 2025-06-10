@@ -29,7 +29,7 @@ export async function estimateNearGas({
   
 
 
-    console.log(_satoshis, fromAddress,toAddress, walletType, isCustomToken, feeRate, env, useDecimals, slippage, 'estimateNearGas>>>')
+    console.log(_satoshis, fromAddress,toAddress, walletType, isCustomToken, feeRate, env, useDecimals, slippage,originAmount, 'estimateNearGas>>>')
 
     let _originAmount:any = 0;
     if (originAmount) {
