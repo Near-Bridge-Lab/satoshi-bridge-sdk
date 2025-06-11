@@ -160,8 +160,11 @@ export const NearHandler = {
                 };
             });
             
-            const waiteDealSwapRes = (querySwapRes as any).routes[0].pools;
-            const processedPools = waiteDealSwapRes.map((item: any) => {
+            const allPools = (querySwapRes as any).routes.reduce((acc: any[], route: any) => {
+                return [...acc, ...route.pools];
+            }, []);
+
+            const processedPools = allPools.map((item: any) => {
                 const { amount_in, pool_id, ...rest } = item;
                 
                 // Only include amount_in if it's not '0' or 0
