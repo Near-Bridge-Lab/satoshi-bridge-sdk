@@ -121,6 +121,27 @@ export async function estimateNearGas({
             args: {}
         })
 
+        // Get metadata to determine total UTXO count
+        const { current_utxos_num } = await viewMethod({
+            method: 'get_metadata',
+            args: {}
+        })
+
+        // Fetch UTXOs in pages
+        const pageSize = 300;
+        const totalPages = Math.ceil(current_utxos_num / pageSize);
+
+        const utxoRequests = Array.from({ length: totalPages }, (_, index) => {
+            const fromIndex = index * pageSize;
+            const limit = Math.min(pageSize, current_utxos_num - fromIndex);
+            return viewMethod({
+                method: 'get_utxos_paged',
+                args: { from_index: fromIndex, limit }
+            });
+        });
+
+        const utxoResults = await Promise.all(utxoRequests);
+        const allUTXO = utxoResults.reduce((acc, result) => ({ ...acc, ...result }), {});
 
         // Check minimum withdraw amount
         if (metaData.min_withdraw_amount) {
@@ -141,12 +162,6 @@ export async function estimateNearGas({
 
         const withdrawChangeAddress = metaData.change_address
         const minChangeAmount = Number(metaData.min_change_amount)
-
-        // Get all UTXOs
-        const allUTXO = await viewMethod({
-            method: 'get_utxos_paged',
-            args: {},
-        })
 
         // Filter UTXOs by minimum change amount
         const utxos = Object.keys(allUTXO).map(key => {
