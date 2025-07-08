@@ -10,6 +10,7 @@ import { NearHandleResp,NearHandleParams } from '../types';
 import {stableTokenMap} from '../constants'
 import {getPrice} from '../utils/status'
 import { registerToken } from '../utils/transaction';
+import { viewMethod } from '../utils/transaction';
 
 
 
@@ -40,7 +41,10 @@ export const NearHandler = {
   }> {       
             
             console.log(fromAmount, fromAddress, toAddress, walletId, slippage, feeRate, env, 'near handler 1>>>')
-
+            const metaData = await viewMethod({
+                method: 'get_config',
+                args: {}
+            })
             const proxyContract = stableTokenMap[env as EnvType][tokenInMetaData.address as TokenAddress]
             const nBtcInOut:any = {};
             const fromTokenAddress = tokenInMetaData.address
@@ -185,13 +189,13 @@ export const NearHandler = {
             estimateResult?.utxosInput.forEach((item: any) => {
                 sumInputAmounts.push(item.value.toString())
             })
-
+            
             const msgNewProxyFtStr = {
                 ToBtc: {
                     actions: [...processedPools],
                     withdraw_nbtc_args: {
                         bridge_withdraw_fee: {
-                            fee_min: (1000 + (estimateResult?.gasMore || 0)).toString(),
+                            fee_min: (Number(metaData?.withdraw_bridge_fee?.fee_min || 400) + (estimateResult?.gasMore || 0)).toString(),
                             fee_rate: 0,
                             protocol_fee_rate: 9000
                         },
