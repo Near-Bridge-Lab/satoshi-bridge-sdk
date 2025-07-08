@@ -9,6 +9,7 @@ import { parseAmount, uint8ArrayToHex } from '../utils/formatter';
 import { NearHandleResp,NearHandleParams } from '../types';
 import {stableTokenMap} from '../constants'
 import {getPrice} from '../utils/status'
+import { registerToken } from '../utils/transaction';
 
 
 
@@ -56,7 +57,7 @@ export const NearHandler = {
 
             console.log(querySwapRes, 'near handler 2>>>')
 
-            // const baseRegisterTransaction = await registerToken(ABTC_ADDRESS, fromAddress);
+            const baseRegisterTransaction = await registerToken(toTokenAddress, fromAddress);
             const satoshis = (querySwapRes as any).amount_out
 
             // const { price: priceIn } = await getPrice(tokenInMetaData.address)
@@ -210,9 +211,9 @@ export const NearHandler = {
             // Prepare the transactions array
             const transactions: any = [];
             
-            // if (baseRegisterTransaction) {
-            //     transactions.push(baseRegisterTransaction);
-            // }
+            if (baseRegisterTransaction) {
+                transactions.push(baseRegisterTransaction);
+            }
             
             const parsedAmountIn = parseAmount(fromAmount, tokenInMetaData.decimals);
             
