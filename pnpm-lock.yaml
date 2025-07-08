@@ -21,8 +21,8 @@ dependencies:
     specifier: ^6.0.0
     version: 6.0.0
   btc-wallet:
-    specifier: 0.5.82-beta
-    version: 0.5.82-beta(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3)
+    specifier: 0.5.83-beta
+    version: 0.5.83-beta(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3)
   coinselect:
     specifier: ^3.1.13
     version: 3.1.13
@@ -592,8 +592,8 @@ packages:
       bs58: 5.0.0
     dev: false
 
-  /btc-wallet@0.5.82-beta(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3):
-    resolution: {integrity: sha512-imh+h0uIZEYHKtLxno0TeIDik7mLH+3jL0HBqkcu/7v0hZoORfMKnv6GixsXJVxTrmmIYEGWdjTz1kinm611zA==}
+  /btc-wallet@0.5.83-beta(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3):
+    resolution: {integrity: sha512-D1Q905VHMqw1pM0vVkV0HguSTxFOT6duXg3wQYqo/LUp0Xb6UrMksrbeOvgOLHbUStmTGAlDuSnEty12fXbFow==}
     peerDependencies:
       react: '>=17.0.0'
       react-dom: '>=17.0.0'
