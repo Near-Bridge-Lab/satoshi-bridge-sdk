@@ -38,7 +38,7 @@
     "big.js": "^7.0.1",
     "bitcoinjs-lib": "^6.1.7",
     "bs58": "^6.0.0",
-    "btc-wallet": "0.5.85-beta",
+    "btc-wallet": "0.5.95-beta",
     "coinselect": "^3.1.13",
     "js-sha256": "^0.11.0",
     "near-api-js": "^5.1.1"

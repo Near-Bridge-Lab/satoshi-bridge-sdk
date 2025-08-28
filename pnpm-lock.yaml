@@ -21,8 +21,8 @@ dependencies:
     specifier: ^6.0.0
     version: 6.0.0
   btc-wallet:
-    specifier: 0.5.85-beta
-    version: 0.5.85-beta(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3)
+    specifier: 0.5.95-beta
+    version: 0.5.95-beta(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3)
   coinselect:
     specifier: ^3.1.13
     version: 3.1.13
@@ -189,18 +189,6 @@ packages:
       borsh: 1.0.0
     transitivePeerDependencies:
       - encoding
-    dev: false
-
-  /@near-wallet-selector/core@8.10.2(near-api-js@5.1.1):
-    resolution: {integrity: sha512-MH8sg6XHyylq2ZXxnOjrKHMCmuRgFfpfdC816fW0R8hctZiXZ0lmfLvgG1xfA2BAxrVytiU1g3dcE97/P5cZqg==}
-    peerDependencies:
-      near-api-js: ^4.0.0 || ^5.0.0
-    dependencies:
-      borsh: 1.0.0
-      events: 3.3.0
-      js-sha256: 0.9.0
-      near-api-js: 5.1.1
-      rxjs: 7.8.1
     dev: false
 
   /@near-wallet-selector/core@8.9.13(near-api-js@5.1.1):
@@ -592,8 +580,8 @@ packages:
       bs58: 5.0.0
     dev: false
 
-  /btc-wallet@0.5.85-beta(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3):
-    resolution: {integrity: sha512-nSNyWqzlM9gEsKfD7o5JxPfTMEGZ27BZPT2857GBU1txvn1wtkoq7AflMZGhHRsvE2X4nJ9nYDhRAnjFvcjC+A==}
+  /btc-wallet@0.5.95-beta(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3):
+    resolution: {integrity: sha512-LBvwG2Bbt9e1fDDBScY8mfMA6RiQcqsv16Mu7K15sdmwsBtDR2vfanDYNf4S2SpNFZTrG/Gc6q2HiOzxN2cgxA==}
     peerDependencies:
       react: '>=17.0.0'
       react-dom: '>=17.0.0'
@@ -602,7 +590,6 @@ packages:
       '@ethereumjs/util': 9.1.0
       '@near-js/transactions': 1.3.3
       '@near-js/utils': 1.1.0
-      '@near-wallet-selector/core': 8.10.2(near-api-js@5.1.1)
       '@particle-network/aa': 1.5.3
       '@particle-network/chains': 1.8.3
       '@particle-network/wallet': 1.4.6(typescript@5.8.3)
