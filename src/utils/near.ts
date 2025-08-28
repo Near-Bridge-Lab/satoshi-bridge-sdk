@@ -188,11 +188,26 @@ export async function estimateNearGas({
         const maxBtcFee = Number(metaData.max_btc_gas_fee)
 
         // Use coinselect to calculate inputs, outputs, and fee
-        const { inputs, outputs, fee } = coinselect(
+        let { inputs, outputs, fee } = coinselect(
             utxos,
             [{ address: toAddress, value: userSatoshis }],
             Math.ceil(feeRate || 6),
         )
+        
+        if (inputs && inputs.length > 10) {
+            const filteredUtxos = utxos.filter((utxo) => utxo.value >= userSatoshis);
+            console.log('filteredUtxos', filteredUtxos);
+            if (filteredUtxos.length > 0) {
+              const result = coinselect(
+                filteredUtxos,
+                [{ address: toAddress, value: userSatoshis }],
+                Math.ceil(feeRate || 6),
+              );
+              inputs = result.inputs;
+              outputs = result.outputs;
+              fee = result.fee;
+            }
+          }
 
         const newInputs = inputs
         let newOutputs = outputs
