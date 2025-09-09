@@ -28,20 +28,20 @@
   "homepage": "https://github.com/Near-Bridge-Lab/satoshi-bridge-sdk#readme",
   "description": "",
   "devDependencies": {
-    "@types/big.js": "^6.2.2",
-    "@types/node": "^22.15.17",
-    "typescript": "^5.8.3"
+    "@types/big.js": "6.2.2",
+    "@types/node": "22.15.17",
+    "typescript": "5.8.3"
   },
   "dependencies": {
-    "@near-js/transactions": "^1.3.3",
-    "@near-js/utils": "^1.1.0",
-    "big.js": "^7.0.1",
-    "bitcoinjs-lib": "^6.1.7",
-    "bs58": "^6.0.0",
+    "@near-js/transactions": "1.3.3",
+    "@near-js/utils": "1.1.0",
+    "big.js": "7.0.1",
+    "bitcoinjs-lib": "6.1.7",
+    "bs58": "6.0.0",
     "btc-wallet": "0.5.95-beta",
-    "coinselect": "^3.1.13",
-    "js-sha256": "^0.11.0",
-    "near-api-js": "^5.1.1"
+    "coinselect": "3.1.13",
+    "js-sha256": "0.11.0",
+    "near-api-js": "5.1.1"
   },
   "peerDependencies": {
     "react": ">=16.8.0"

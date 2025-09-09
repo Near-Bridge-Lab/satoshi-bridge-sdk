@@ -6,31 +6,31 @@ settings:
 
 dependencies:
   '@near-js/transactions':
-    specifier: ^1.3.3
+    specifier: 1.3.3
     version: 1.3.3
   '@near-js/utils':
-    specifier: ^1.1.0
+    specifier: 1.1.0
     version: 1.1.0
   big.js:
-    specifier: ^7.0.1
+    specifier: 7.0.1
     version: 7.0.1
   bitcoinjs-lib:
-    specifier: ^6.1.7
+    specifier: 6.1.7
     version: 6.1.7
   bs58:
-    specifier: ^6.0.0
+    specifier: 6.0.0
     version: 6.0.0
   btc-wallet:
     specifier: 0.5.95-beta
     version: 0.5.95-beta(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3)
   coinselect:
-    specifier: ^3.1.13
+    specifier: 3.1.13
     version: 3.1.13
   js-sha256:
-    specifier: ^0.11.0
-    version: 0.11.1
+    specifier: 0.11.0
+    version: 0.11.0
   near-api-js:
-    specifier: ^5.1.1
+    specifier: 5.1.1
     version: 5.1.1
   react:
     specifier: '>=16.8.0'
@@ -38,13 +38,13 @@ dependencies:
 
 devDependencies:
   '@types/big.js':
-    specifier: ^6.2.2
+    specifier: 6.2.2
     version: 6.2.2
   '@types/node':
-    specifier: ^22.15.17
-    version: 22.15.32
+    specifier: 22.15.17
+    version: 22.15.17
   typescript:
-    specifier: ^5.8.3
+    specifier: 5.8.3
     version: 5.8.3
 
 packages:
@@ -398,7 +398,7 @@ packages:
   /@types/connect@3.4.38:
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
     dependencies:
-      '@types/node': 22.15.32
+      '@types/node': 22.15.17
     dev: false
 
   /@types/json-schema@7.0.15:
@@ -409,8 +409,8 @@ packages:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
     dev: false
 
-  /@types/node@22.15.32:
-    resolution: {integrity: sha512-3jigKqgSjsH6gYZv2nEsqdXfZqIFGAV36XYYjf9KGZ3PSG+IhLecqPnI310RvjutyMwifE2hhhNEklOUrvx/wA==}
+  /@types/node@22.15.17:
+    resolution: {integrity: sha512-wIX2aSZL5FE+MR0JlvF87BNVrtFWf6AE6rxSE9X7OwnVvoyCQjpzSRJ+M87se/4QCkCiebQAqrJ0y6fwIyi7nw==}
     dependencies:
       undici-types: 6.21.0
 
@@ -421,13 +421,13 @@ packages:
   /@types/ws@7.4.7:
     resolution: {integrity: sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==}
     dependencies:
-      '@types/node': 22.15.32
+      '@types/node': 22.15.17
     dev: false
 
   /@types/ws@8.18.1:
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
     dependencies:
-      '@types/node': 22.15.32
+      '@types/node': 22.15.17
     dev: false
 
   /abitype@1.0.8(typescript@5.8.3):
@@ -1130,8 +1130,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /js-sha256@0.11.1:
-    resolution: {integrity: sha512-o6WSo/LUvY2uC4j7mO50a2ms7E/EAdbP0swigLV+nzHKTTaYnaLIWJ02VdXrsJX0vGedDESQnLsOekr94ryfjg==}
+  /js-sha256@0.11.0:
+    resolution: {integrity: sha512-6xNlKayMZvds9h1Y1VWc0fQHQ82BxTXizWPEtEeGvmOUYpBRy4gbWroHLpzowe6xiQhHpelCQiE7HEdznyBL9Q==}
     dev: false
 
   /js-sha256@0.9.0:
